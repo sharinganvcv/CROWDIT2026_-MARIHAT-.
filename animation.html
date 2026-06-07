@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MariHat - Stacked Scroll Effect</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+  <style>
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #111;
+      overflow-x: hidden;
+    }
+
+    /* Container Utama */
+    .stack-container {
+      width: 100%;
+      position: relative;
+    }
+
+    /* Base Section Style */
+    .section {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      position: sticky;
+      top: 0;
+      overflow: hidden;
+      /* Transisi mulus saat diubah oleh JavaScript */
+      transition: transform 0.1s linear, opacity 0.1s linear;
+      will-change: transform, opacity;
+    }
+
+    /* SECTION 1: Tentang MariHat */
+    .section-one {
+      background-color: #ffffff;
+      color: #333333;
+      z-index: 1;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .content-one {
+      max-width: 800px;
+    }
+
+    .content-one h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #000;
+    }
+
+    .content-one h1 span {
+      color: #458638;
+    }
+
+    .content-one p {
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 1.5rem;
+    }
+
+    /* SECTION 2: Kenapa Kesehatan itu Penting (Green Page) */
+    .section-two {
+      background-color: #458638;
+      color: #ffffff;
+      z-index: 2;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .content-two h2 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      text-align: center;
+      max-width: 900px;
+      line-height: 1.3;
+    }
+
+    /* SECTION 3: Detail Poin Grid Layout */
+    .section-three {
+      background-color: #ffffff;
+      color: #333333;
+      z-index: 3;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+      display: grid;
+      grid-template-columns: 1.1fr 1.2fr; /* Sedikit dilebarkan kolom kirinya */
+      align-items: center; /* Set ke tengah vertikal secara keseluruhan */
+      padding: 0 4rem;
+      height: 100vh;
+    }
+
+    /* Bagian Kiri (Tempat Foto di Tengah + Efek Highlight Hijau) */
+    .image-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center; /* KUNCI PERBAIKAN: Foto bergeser pas ke tengah vertikal */
+      position: relative;
+    }
+
+    /* Efek lingkaran glow hijau diposisikan tepat di tengah belakang foto */
+    .image-placeholder::before {
+      content: "";
+      position: absolute;
+      width: 950px;
+      height: 950px;
+      background: radial-gradient(circle, rgb(69, 134, 56) 0%, rgba(255, 255, 255, 0.308) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); /* Menjaga glow presisi di tengah bayangan badan */
+      filter: blur(25px);
+      z-index: 1;
+    }
+
+    /* KUNCI PERBAIKAN: Ukuran foto diperbesar tanpa merusak rasio gambar asli */
+    .person-img {
+      width: 115%; /* Menaikkan batas ukuran lebar gambar */
+      height: auto;
+      max-height: 90vh;
+      object-fit: contain;
+      z-index: 2;
+      position: relative;
+      transform: scale(1.1); /* Di-scale up tipis agar mendominasi area tengah */
+    }
+
+    /* Bagian Kanan (Konten Teks & List Poin) */
+    .content-three {
+      align-self: center;
+      padding-left: 1rem;
+    }
+
+    .content-three h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #3b6e2f;
+      margin-bottom: 3rem;
+      line-height: 1.2;
+    }
+
+    /* Grid Poin List */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem 2rem;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+
+    /* Wadah Bulat Icon */
+    .icon-container {
+      width: 42px;
+      height: 42px;
+      background-color: #3b6e2f;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .icon-container .material-icons-round {
+      color: #ffffff;
+      font-size: 1.3rem;
+    }
+
+    .feature-text h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #111111;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-text p {
+      font-size: 1rem;
+      color: #444444;
+      line-height: 1.5;
+    }
+
+    /* Responsive Device */
+    @media (max-width: 992px) {
+      .section-three {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem;
+        align-items: center;
+      }
+      .image-placeholder {
+        display: none;
+      }
+      .content-three {
+        padding-left: 0;
+        padding-bottom: 0;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stack-container">
+    
+    <section class="section section-one" id="sec1">
+      <div class="content-one">
+        <h1>Tentang <span>MARIHAT</span> (Mari Sehat)</h1>
+        <p>MariHat adalah platform edukasi kesehatan bagi remaja yang menyediakan informasi, quiz interaktif, dan pembelajaran untuk membantu membangun kebiasaan hidup sehat yang mendukung proses belajar.</p>
+        <p>Website ini hadir sebagai ruang belajar yang santai dan tidak membosankan, supaya remaja bisa lebih sadar akan kebiasaan sehat tanpa merasa dipaksa. Harapannya, MariHat bisa jadi teman belajar yang bikin kamu lebih peduli sama diri sendiri dan mulai membangun gaya hidup yang lebih baik dari sekarang.</p>
+      </div>
+    </section>
+
+    <section class="section section-two" id="sec2">
+      <div class="content-two">
+        <h2>Kenapa Kesehatan itu Penting bagi REMAJA?</h2>
+      </div>
+    </section>
+
+    <section class="section section-three" id="sec3">
+      <div class="image-placeholder">
+        <img src="assets/images/foto1.png" alt="Remaja MariHat" class="person-img">
+      </div>
+      
+      <div class="content-three">
+        <h2>Kenapa kesehatan remaja itu penting?</h2>
+        
+        <div class="features-grid">
+          <div class="feature-item">
+            <div class="icon-container">
+              <span class="material-icons-round">eco</span>
+            </div>
+            <div class="feature-text">
+              <h3>Masa Pertumbuhan Emas</h3>
+              <p>Mendukung perkembangan fisik dan otak yang sangat pesat.</p>
+            </div>
+          </div>
+          
+          <div class="feature-item">
+            <div class="icon-container">
+              <span class="material-icons-round">bolt</span>
+            </div>
+            <div class="feature-text">
+              <h3>Dongkrak Prestasi</h3>
+              <p>Tubuh yang bugar meningkatkan fokus belajar, kreativitas, dan produktivitas.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="icon-container">
+              <span class="material-icons-round">analytics</span>
+            </div>
+            <div class="feature-text">
+              <h3>Investasi Masa Depan</h3>
+              <p>Membangun kebiasaan sehat sejak dini untuk mencegah penyakit kronis saat dewasa.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="icon-container">
+              <span class="material-icons-round">track_changes</span>
+            </div>
+            <div class="feature-text">
+              <h3>Kemandirian Positif</h3>
+              <p>Melatih remaja mengambil keputusan yang bertanggung jawab bagi dirinya sendiri.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="icon-container">
+              <span class="material-icons-round">psychology</span>
+            </div>
+            <div class="feature-text">
+              <h3>Kesehatan Mental</h3>
+              <p>Membantu mengelola stres, emosi, dan tekanan sosial dengan lebih baik.</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <div class="icon-container">
+              <span class="material-icons-round">cached</span>
+            </div>
+            <div class="feature-text">
+              <h3>Siklus Generasi Sehat</h3>
+              <p>Mendukung perkembangan fisik dan otak yang sangat pesat.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const sec1 = document.getElementById('sec1');
+    const sec2 = document.getElementById('sec2');
+    
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const vh = window.innerHeight;
+      
+      // Animasi Section 1
+      let progress1 = scrolled / vh;
+      if (progress1 > 1) progress1 = 1;
+      if (progress1 < 0) progress1 = 0;
+      
+      sec1.style.transform = `scale(${1 - (progress1 * 0.08)})`;
+      sec1.style.opacity = 1 - (progress1 * 0.6);
+
+      // Animasi Section 2
+      let progress2 = (scrolled - vh) / vh;
+      if (progress2 > 1) progress2 = 1;
+      if (progress2 < 0) progress2 = 0;
+
+      sec2.style.transform = `scale(${1 - (progress2 * 0.08)})`;
+      sec2.style.opacity = 1 - (progress2 * 0.6);
+    });
+  </script>
+
+</body>
+</html>

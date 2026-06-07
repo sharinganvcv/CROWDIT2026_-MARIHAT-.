@@ -5,7 +5,7 @@ window.addEventListener('scroll', () => {
 });
 
 // ── Hamburger / Mobile Menu ───────────────────────────────────────
-const hamburger  = document.getElementById('hamburger');
+const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobile-menu');
 
 hamburger.addEventListener('click', () => {
@@ -16,7 +16,7 @@ hamburger.addEventListener('click', () => {
   const isOpen = mobileMenu.classList.contains('open');
   if (isOpen) {
     spans[0].style.transform = 'translateY(7px) rotate(45deg)';
-    spans[1].style.opacity   = '0';
+    spans[1].style.opacity = '0';
     spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
   } else {
     spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
@@ -68,3 +68,4 @@ document.getElementById('btn-eksplor').addEventListener('click', (e) => {
   e.preventDefault();
   document.getElementById('features-strip').scrollIntoView({ behavior: 'smooth' });
 });
+
