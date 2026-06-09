@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Kesehatan Seru Jumbo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Background Utama Layar */
+        body {
+            background-color: #f0f7f4;
+            min-height: 100vh;
+            padding: 40px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Progress Bar Tetap di Paling Atas */
+        .progress-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 50px;
+            width: 100%;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-bar {
+            height: 10px;
+            flex: 1;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .progress-bar.active {
+            background-color: #4caf50;
+        }
+
+        /* WRAPPER SLIDE UTAMA - Lebar 300% untuk menampung 3 halaman */
+        .slide-wrapper {
+            display: flex;
+            width: 300%; 
+            max-width: 4200px;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            flex: 1;
+        }
+
+        /* Pembagian Setiap Halaman (Masing-masing 1/3 dari 300%) */
+        .slide-page {
+            width: 33.333%; 
+            flex-shrink: 0;
+            transition: opacity 0.4s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px;
+        }
+
+        /* State Awal Opacity Halaman */
+        .question-page { opacity: 1; }
+        .meme-page { opacity: 0; pointer-events: none; }
+        .explanation-page { opacity: 0; pointer-events: none; }
+
+        /* ========================================== */
+        /* LOGIKA TRANSISI FIXED SLIDE + FADE        */
+        /* ========================================== */
+        
+        /* Posisi 1: Geser & Tampilkan Meme */
+        .slide-wrapper.show-meme {
+            transform: translateX(-33.333%);
+        }
+        .slide-wrapper.show-meme .question-page { opacity: 0; }
+        .slide-wrapper.show-meme .meme-page { opacity: 1; pointer-events: auto; }
+
+        /* Posisi 2: Geser & Tampilkan Penjelasan */
+        .slide-wrapper.show-explanation {
+            transform: translateX(-66.666%);
+        }
+        .slide-wrapper.show-explanation .question-page { opacity: 0; }
+        .slide-wrapper.show-explanation .meme-page { opacity: 0; }
+        .slide-wrapper.show-explanation .explanation-page { opacity: 1; pointer-events: auto; }
+
+
+        /* ==================== HALAMAN 1: SOAL ==================== */
+        .quiz-header {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .question {
+            font-size: 54px; 
+            font-weight: 800;
+            color: #1a1a1a;
+            margin-bottom: 60px;
+            line-height: 1.2;
+            letter-spacing: -1px;
+            max-width: 1300px;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        @media (min-width: 900px) {
+            .options-container {
+                grid-template-columns: 1fr 1fr; 
+            }
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 3px solid #4caf50;
+            border-radius: 50px;
+            padding: 30px 40px; 
+            font-size: 24px;    
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            color: #2e7d32;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #e8f5e9;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(76, 175, 80, 0.2);
+        }
+
+        .option-prefix {
+            background-color: #4caf50;
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 25px;
+            font-weight: 800;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        /* Benar -> Mengembang (Pulse) */
+        .option-btn.correct {
+            background-color: #4caf50 !important;
+            border-color: #4caf50 !important;
+            color: white !important;
+            animation: pulseCorrect 0.5s ease-in-out infinite alternate;
+        }
+        .option-btn.correct .option-prefix {
+            background-color: white !important;
+            color: #4caf50 !important;
+        }
+
+        @keyframes pulseCorrect {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            100% { transform: scale(1.03); box-shadow: 0 0 20px 10px rgba(76, 175, 80, 0); }
+        }
+
+        /* Salah -> Bergetar (Shake) */
+        .option-btn.wrong {
+            background-color: #f44336 !important;
+            border-color: #f44336 !important;
+            color: white !important;
+            animation: shakeWrong 0.4s ease-in-out;
+        }
+        .option-btn.wrong .option-prefix {
+            background-color: white !important;
+            color: #f44336 !important;
+        }
+
+        @keyframes shakeWrong {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+
+        /* ==================== HALAMAN 2: MEME ONLY ==================== */
+        .meme-status-text {
+            font-size: 54px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .text-correct { color: #4caf50; }
+        .text-wrong { color: #f44336; }
+
+        .meme-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        /* Format Stiker/Meme Rasio KOTAK 1:1 */
+        .meme-sticker {
+            width: 380px;
+            height: 380px;
+            object-fit: cover; 
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .meme-timer-text {
+            text-align: center;
+            font-size: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+
+        /* ==================== HALAMAN 3: PENJELASAN ==================== */
+        .explanation-title {
+            font-weight: 800;
+            font-size: 42px;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        /* FIXED: Ijo-ijo melengkung di sebelah kiri sudah dibuang total! */
+        .explanation-text {
+            font-size: 26px;
+            color: #222;
+            line-height: 1.6;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 24px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+
+        .footer-controls {
+            display: flex;
+            justify-content: flex-end; 
+            max-width: 1200px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+        }
+
+        .next-btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 15px rgba(46, 125, 50, 0.2);
+        }
+
+        .next-btn:hover {
+            background-color: #1b5e20;
+            transform: scale(1.05);
+        }
+
+
+        /* ==================== SCREEN SKOR AKHIR ==================== */
+        .result-screen {
+            text-align: center;
+            display: none;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .result-screen h2 {
+            font-size: 54px;
+            margin-bottom: 20px;
+        }
+
+        .result-score {
+            font-size: 80px;
+            font-weight: 900;
+            color: #4caf50;
+            margin: 40px 0;
+        }
+
+        .result-screen p {
+            font-size: 26px;
+            color: #444;
+        }
+
+        .restart-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 40px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: transform 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-container" id="progress-container"></div>
+    
+    <div id="quiz-screen" style="flex: 1; display: flex; flex-direction: column;">
+        <div class="slide-wrapper" id="slide-wrapper">
+            
+            <div class="slide-page question-page" id="question-page">
+                <div class="quiz-header" id="quiz-header">1 dari 10 kuis</div>
+                <div class="question" id="question-text">Loading Soal...</div>
+                <div class="options-container" id="options-container">
+                    </div>
+            </div>
+
+            <div class="slide-page meme-page" id="meme-page">
+                <div class="meme-status-text" id="meme-status-text">KERJA BAGUS! 👍</div>
+                <div class="meme-wrapper">
+                    <img id="meme-sticker" class="meme-sticker" src="" alt="Meme Status">
+                </div>
+                <div class="meme-timer-text">Membuka penjelasan...</div>
+            </div>
+
+            <div class="slide-page explanation-page" id="explanation-page">
+                <div class="explanation-title">💡 Kenapa begitu? Ini Penjelasannya:</div>
+                <p class="explanation-text" id="explanation-text">Penjelasan lengkap ada di sini...</p>
+                <div class="footer-controls">
+                    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next kuis (4s)</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="result-screen" id="result-screen">
+        <h2>Kuis Selesai! 🎉</h2>
+        <div class="result-score" id="final-score">0 / 10</div>
+        <p id="result-message">Hebat! Tetap jaga kesehatanmu ya!</p>
+        <button class="restart-btn" onclick="restartQuiz()">Main Lagi</button>
+    </div>
+
+<script>
+    // Database Soal Kuis
+    const quizData = [
+        {
+            question: "Kenapa kita harus minum air setiap hari minimal 1-2 liter perhari?",
+            options: ["Mencegah dehidrasi & menjaga organ tubuh", "Biar kulit jadi warna hijau", "Supaya cepat mengantuk", "Biar tidak perlu makan lagi"],
+            correct: 0,
+            explanation: "Air sangat penting untuk mencegah dehidrasi, melancarkan pencernaan, menjaga fungsi ginjal, dan membuang racun dari dalam tubuh."
+        },
+        {
+            question: "Berapa jam idealnya remaja tidur dalam satu hari?",
+            options: ["3 - 4 Jam", "5 - 6 Jam", "8 - 10 Jam", "15 - 18 Jam"],
+            correct: 2,
+            explanation: "Remaja usia sekolah membutuhkan tidur sekitar 8 hingga 10 jam per malam agar pertumbuhan dan fungsi otaknya maksimal."
+        },
+        {
+            question: "Vitamin apa yang paling banyak didapatkan secara alami dari berjemur di bawah matahari pagi?",
+            options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+            correct: 3,
+            explanation: "Sinar matahari pagi merangsang kulit kita untuk memproduksi Vitamin D yang baik untuk pertumbuhan tulang dan imun tubuh."
+        },
+        {
+            question: "Manakah di bawah ini yang tergolong sebagai makanan 'junk food'?",
+            options: ["Gado-gado", "Burgers & Kentang Goreng", "Sayur Sop", "Buah Potong"],
+            correct: 1,
+            explanation: "Junk food tinggi akan kalori, lemak jenuh, dan garam, tapi minim nutrisi dan serat makanya tidak boleh sering dimakan."
+        },
+        {
+            question: "Apa fungsi utama dari sel darah merah di dalam tubuh kita?",
+            options: ["Melawan bakteri jahat", "Mengedarkan oksigen ke seluruh tubuh", "Membekukan luka", "Mencerna makanan"],
+            correct: 1,
+            explanation: "Sel darah merah mengandung hemoglobin yang bertugas mengikat dan membawa oksigen dari paru-paru ke seluruh tubuh."
+        },
+        {
+            question: "Mengapa kita disarankan untuk mencuci tangan menggunakan sabun?",
+            options: ["Biar tangan jadi licin", "Sabun bisa membunuh kuman dan virus", "Supaya warna kulit berubah", "Hanya formalitas saja"],
+            correct: 1,
+            explanation: "Molekul sabun efektif memecah membran lemak pada kuman dan virus, lalu meluruhkannya bersama aliran air."
+        },
+        {
+            question: "Zat pembangun yang sangat dibutuhkan tubuh untuk pertumbuhan otot dan memperbaiki jaringan rusak adalah...",
+            options: ["Karbohidrat", "Lemak", "Protein", "Glukosa"],
+            correct: 2,
+            explanation: "Protein berfungsi sebagai zat pembangun utama untuk membentuk sel baru, memperbaiki jaringan rusak, dan membangun otot."
+        },
+        {
+            question: "Berapa kali idealnya kita menyikat gigi dalam sehari?",
+            options: ["1 kali seminggu", "Minimal 2 kali sehari", "Setiap jam", "Hanya saat mau mandi sore"],
+            correct: 1,
+            explanation: "Menyikat gigi minimal 2 kali sehari (pagi setelah sarapan dan malam sebelum tidur) menjaga gigi dari plak dan berlubang."
+        },
+        {
+            question: "Organ tubuh mana yang berfungsi untuk menyaring racun dari makanan dan minuman kita?",
+            options: ["Jantung", "Paru-paru", "Hati (Liver)", "Mata"],
+            correct: 2,
+            explanation: "Hati atau liver bertugas menyaring darah, menetralkan racun, dan memetabolisme obat-obatan di dalam tubuh."
+        },
+        {
+            question: "Olahraga ringan atau aktivitas fisik sebaiknya dilakukan minimal berapa kali dalam seminggu?",
+            options: ["1 kali sebulan", "Tidak perlu sama sekali", "3 - 5 kali seminggu", "Setiap detik tanpa henti"],
+            correct: 2,
+            explanation: "Olahraga rutin 3-5 kali seminggu dengan total waktu 150 menit sangat bagus untuk menjaga kesehatan jantung dan stamina tubuh."
+        }
+    ];
+
+    // DAFTAR STIKER MEME RANDOM (Silakan sesuaikan nama filenya bray)
+    const memes = {
+        correct: [
+            "assets/memes/benar.png",
+            "assets/memes/benar1.png",
+            "assets/memes/benar2.png"
+        ], 
+        wrong: [
+            "assets/memes/salah.png",
+            "assets/memes/salah1.png",
+            "assets/memes/salah2.png"
+        ]    
+    };
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let autoNextTimeout = null; // Penampung ID timeout otomatis
+    let countdownInterval = null; // Penampung hitung mundur teks tombol
+
+    function initQuiz() {
+        createProgressBar();
+        loadQuestion();
+    }
+
+    function createProgressBar() {
+        const container = document.getElementById('progress-container');
+        container.innerHTML = '';
+        for (let i = 0; i < quizData.length; i++) {
+            const bar = document.createElement('div');
+            bar.classList.add('progress-bar');
+            if (i === 0) bar.classList.add('active');
+            container.appendChild(bar);
+        }
+    }
+
+    function updateProgressBar() {
+        const bars = document.querySelectorAll('.progress-bar');
+        bars.forEach((bar, index) => {
+            if (index <= currentQuestionIndex) {
+                bar.classList.add('active');
+            } else {
+                bar.classList.remove('active');
+            }
+        });
+    }
+
+    function loadQuestion() {
+        // Hapus semua sisa-sisa timer dari soal sebelumnya agar tidak bentrok
+        clearTimeout(autoNextTimeout);
+        clearInterval(countdownInterval);
+
+        const wrapper = document.getElementById('slide-wrapper');
+        wrapper.classList.remove('show-meme', 'show-explanation');
+
+        const currentQuestion = quizData[currentQuestionIndex];
+        
+        document.getElementById('quiz-header').innerText = `${currentQuestionIndex + 1} dari ${quizData.length} kuis`;
+        document.getElementById('question-text').innerText = currentQuestion.question;
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        const prefixes = ['A', 'B', 'C', 'D'];
+        currentQuestion.options.forEach((option, index) => {
+            const button = document.createElement('button');
+            button.classList.add('option-btn');
+            button.innerHTML = `<span class="option-prefix">${prefixes[index]}</span> ${option}`;
+            button.onclick = () => checkAnswer(index, button);
+            optionsContainer.appendChild(button);
+        });
+
+        updateProgressBar();
+    }
+
+    function checkAnswer(selectedIndex, selectedButton) {
+        const currentQuestion = quizData[currentQuestionIndex];
+        const allButtons = document.querySelectorAll('.option-btn');
+        const wrapper = document.getElementById('slide-wrapper');
+
+        allButtons.forEach(btn => btn.disabled = true);
+
+        const isCorrect = selectedIndex === currentQuestion.correct;
+        const memeStatusText = document.getElementById('meme-status-text');
+        const memeSticker = document.getElementById('meme-sticker');
+
+        if (isCorrect) {
+            score++;
+            selectedButton.classList.add('correct');
+            memeStatusText.innerText = "KERJA BAGUS! 🏃‍♂️🎉";
+            memeStatusText.className = "meme-status-text text-correct";
+            
+            const randomIndex = Math.floor(Math.random() * memes.correct.length);
+            memeSticker.src = memes.correct[randomIndex];
+        } else {
+            selectedButton.classList.add('wrong');
+            allButtons[currentQuestion.correct].classList.add('correct'); 
+            memeStatusText.innerText = "COBA LAGI YAA! 🥹❌";
+            memeStatusText.className = "meme-status-text text-wrong";
+            
+            const randomIndex = Math.floor(Math.random() * memes.wrong.length);
+            memeSticker.src = memes.wrong[randomIndex];
+        }
+
+        document.getElementById('explanation-text').innerText = currentQuestion.explanation;
+        
+        // JEDA TAHAP 1: Nikmati animasi tombol di Halaman Soal (1 Detik)
+        setTimeout(() => {
+            wrapper.classList.add('show-meme');
+            
+            // JEDA TAHAP 2: Nikmati meme lucu di Halaman Meme (3 Detik)
+            setTimeout(() => {
+                wrapper.classList.remove('show-meme');
+                wrapper.classList.add('show-explanation');
+
+                // MULAI HITUNG MUNDUR OTOMATIS (4 DETIK) DI HALAMAN PENJELASAN
+                startAutoNextTimer();
+
+            }, 3000);
+
+        }, 1000); 
+    }
+
+    function startAutoNextTimer() {
+        let timeLeft = 4;
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.innerText = `Next kuis (${timeLeft}s)`;
+
+        // Mengupdate teks tombol setiap 1 detik
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                nextBtn.innerText = `Next kuis (${timeLeft}s)`;
+            } else {
+                clearInterval(countdownInterval);
+            }
+        }, 1000);
+
+        // Eksekusi perpindahan halaman otomatis tepat di detik ke-4
+        autoNextTimeout = setTimeout(() => {
+            nextQuestion();
+        }, 4000);
+    }
+
+    function nextQuestion() {
+        // Hentikan timer & countdown jika user menekan tombol secara manual sebelum 4 detik habis
+        clearTimeout(autoNextTimeout);
+        clearInterval(countdownInterval);
+
+        const wrapper = document.getElementById('slide-wrapper');
+        wrapper.classList.remove('show-explanation');
+        
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }, 500);
+    }
+
+    function showResult() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        const finalScore = (score / quizData.length) * 100;
+        document.getElementById('final-score').innerText = `${score} / ${quizData.length} (Skor: ${finalScore})`;
+        
+        const message = document.getElementById('result-message');
+        if (finalScore >= 80) {
+            message.innerText = "Wah kamu paham banget soal kesehatan! Pertahankan gaya hidup sehatmu! 💪🤩";
+        } else if (finalScore >= 50) {
+            message.innerText = "Cukup bagus! Sedikit belajar lagi biar makin paham cara jaga tubuh tetap fit! 👍🏃‍♂️";
+        } else {
+            message.innerText = "Yuk lebih peduli sama kesehatan tubuh, baca-baca lagi tips sehat ya! 🍎 Semangat!";
+        }
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('quiz-screen').style.display = 'flex';
+        document.getElementById('result-screen').style.display = 'none';
+        createProgressBar();
+        loadQuestion();
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
