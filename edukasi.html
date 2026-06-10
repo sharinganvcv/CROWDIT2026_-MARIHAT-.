@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MARIHAT – Mari Sehat Bersama</title>
+  <meta name="description" content="MARIHAT hadir sebagai platform edukasi terpercaya untuk membantu Anda memahami kesehatan fisik dan mental sejak dini. Mari jaga aset terpenting tubuh dan pikiran Anda." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .card-section {
+      background: #f7fafc;
+      padding: 40px 20px;
+    }
+
+    .card-section .container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 0 auto;
+    }
+
+    .card-section .main-banner {
+      background-color: #438138;
+      color: #ffffff;
+      text-align: center;
+      padding: 40px 20px;
+      border-radius: 24px;
+    }
+
+    .card-section .main-banner h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .card-section .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .card-section .card {
+      position: relative;
+      border-radius: 24px;
+      padding: 24px;
+      color: #ffffff;
+      height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+    }
+
+    .card-section .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-section .card-1 { background-color: #e35d26; }
+    .card-section .card-2 { background-color: #51a48b; }
+    .card-section .card-3 { background-color: #f18c06; }
+    .card-section .card-4 { background-color: #f79275; }
+
+    .card-section .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 4px;
+      z-index: 2;
+    }
+
+    .card-section .card-subtitle {
+      font-size: 0.7rem;
+      font-weight: 400;
+      opacity: 0.9;
+      z-index: 2;
+    }
+
+    .card-section .arrow-button {
+      width: 36px;
+      height: 36px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      transition: background-color 0.3s ease;
+    }
+
+    .card-section .card:hover .arrow-button {
+      background-color: #ffffff;
+    }
+
+    .card-section .arrow-button svg {
+      width: 16px;
+      height: 16px;
+      fill: #333333;
+    }
+
+    .card-section .card-icon {
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+      .card-section .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .card-section .main-banner h1 {
+        font-size: 1.5rem;
+      }
+
+      .md\:text-5xl {
+        font-size: 1.5rem;
+      }
+
+      .lg\:text-6xl {
+        font-size: 2rem;
+      }
+
+      .md\:block {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .card-section .card-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .w-screen {
+      width: 100vw;
+    }
+
+    .h-screen {
+      height: 100vh;
+    }
+
+    .bg-\[\#438136\] {
+      background-color: #438136;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .justify-center {
+      justify-content: center;
+    }
+
+    .px-6 {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .select-none {
+      user-select: none;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-white {
+      color: #ffffff;
+    }
+
+    .text-3xl {
+      font-size: 1.875rem;
+    }
+
+    .font-semibold {
+      font-weight: 600;
+    }
+
+    .leading-tight {
+      line-height: 1.1;
+    }
+
+    .max-w-4xl {
+      max-width: 56rem;
+    }
+
+    .tracking-wide {
+      letter-spacing: 0.05em;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .md\:text-5xl {
+      font-size: 3rem;
+    }
+
+    .lg\:text-6xl {
+      font-size: 3.75rem;
+    }
+
+    .md\:block {
+      display: block;
+    }
+
+    .content-section {
+      width: 100vw;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+      padding: 60px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .text-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .text-content h1 {
+      color: #438136;
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .text-content p {
+      color: #438136;
+      font-size: 1.35rem;
+      font-weight: 400;
+      line-height: 1.6;
+      text-align: justify;
+    }
+
+    .image-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .image-content img {
+      width: 100%;
+      max-width: 550px;
+      height: auto;
+      object-fit: cover;
+      border-radius: 40px;
+    }
+
+    @media (max-width: 968px) {
+      .content-section {
+        grid-template-columns: 1fr;
+        padding: 40px 24px;
+        gap: 30px;
+        text-align: center;
+      }
+
+      .text-content h1 {
+        font-size: 2rem;
+      }
+
+      .text-content p {
+        font-size: 1.05rem;
+        text-align: center;
+      }
+
+      .image-content img {
+        max-width: 100%;
+        border-radius: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ── NAVBAR ── -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo" id="logo-link">
+        <img src="assets/logo/logo_marihat.png" alt="MARIHAT Logo" class="logo-img" />
+      </a>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="#" class="nav-link active" id="nav-home">Beranda</a>
+        <a href="#" class="nav-link" id="nav-about">Tentang</a>
+        <a href="#" class="nav-link" id="nav-edukasi">Edukasi</a>
+        <a href="#" class="nav-link" id="nav-quiz">Quiz</a>
+      </nav>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#" class="mobile-link" id="mob-home">Beranda</a>
+    <a href="#" class="mobile-link" id="mob-about">Tentang</a>
+    <a href="#" class="mobile-link" id="mob-edukasi">Edukasi</a>
+    <a href="#" class="mobile-link" id="mob-quiz">Quiz</a>
+  </div>
+
+  <section class="card-section">
+    <div class="container">
+      <div class="main-banner">
+        <h1>Marihat: Jaga Kesehatan Tubuh dan<br>Pikiran untuk Investasi Masa Depan Anda.</h1>
+      </div>
+
+      <div class="card-grid">
+        <a href="#" class="card card-1">
+          <div>
+            <div class="card-title">Konten edukasi kesehatan singkat</div>
+            <div class="card-subtitle">Hanya 60 detik</div>
+          </div>
+          <svg class="card-icon" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="5" y="2" width="14" height="20" rx="2" />
+            <path d="M12 18h.01" stroke-linecap="round" />
+          </svg>
+          <div class="arrow-button">
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a href="#" class="card card-2">
+          <div>
+            <div class="card-title">Kuis singkat seputar kesehatan</div>
+            <div class="card-subtitle">Kuis seru 10 soal</div>
+          </div>
+          <svg class="card-icon" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+          </svg>
+          <div class="arrow-button">
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a href="#" class="card card-3">
+          <div>
+            <div class="card-title">Kalkulator hidrasi dan tidur</div>
+            <div class="card-subtitle">Pantau hidrasi & jam tidur</div>
+          </div>
+          <svg class="card-icon" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+            <line x1="9" y1="9" x2="15" y2="9" />
+            <line x1="9" y1="13" x2="15" y2="13" />
+            <line x1="9" y1="17" x2="15" y2="17" />
+          </svg>
+          <div class="arrow-button">
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+
+        <a href="#" class="card card-4">
+          <div>
+            <div class="card-title">Tanyakan seputar kesehatan</div>
+            <div class="card-subtitle">Dengan ai asistant maribot</div>
+          </div>
+          <svg class="card-icon" width="160" height="160" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+          </svg>
+          <div class="arrow-button">
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-screen h-screen bg-[#438136] flex items-center justify-center px-6 select-none text-center">
+    <h1 class="text-white text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight max-w-4xl tracking-wide">
+      Kenali dan Pahami Dirimu <br class="hidden md:block"> Bersama Marihat
+    </h1>
+  </section>
+
+  <section class="content-section">
+    <div class="text-content">
+      <h1>Kenali dan Pahami Dirimu Bersama Marihat</h1>
+      <p>
+        Masa remaja adalah periode penting yang penuh dengan perubahan fisik, emosional, dan sosial. Marihat hadir sebagai ruang edukasi yang membantu remaja memahami berbagai aspek kesehatan secara ilmiah, mudah dipahami, dan relevan dengan kehidupan sehari-hari.
+      </p>
+    </div>
+
+    <div class="image-content">
+      <img src="assets/images/remajasehat.jpg" alt="Remaja Marihat" />
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="image-content">
+      <img src="assets/images/remaja2.jpg" alt="Edukasi Kesehatan" />
+    </div>
+
+    <div class="text-content">
+      <h1>Edukasi Kesehatan yang Relevan dan Mudah Dipahami</h1>
+      <p>
+        Di Marihat, kami menyajikan konten edukasi kesehatan yang dirancang khusus untuk remaja. Dari tips menjaga kesehatan mental hingga panduan pola makan sehat, semua disampaikan dengan bahasa yang sederhana, visual menarik, dan informasi yang terpercaya.
+      </p>
+    </div>
+    </section>
+
+    
+
+    <section class="w-screen h-screen bg-[#438136] flex items-center justify-center px-6 select-none text-center">
+    <h1 class="text-white text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight max-w-4xl tracking-wide">
+      Temukan konten edukasi <br class="hidden md:block"> kesehatan menarik
+    </h1>
+  </section>
+
+  <style>
+    /* --- KALKULATOR GIZI - KOSMETIK & VARIABEL GLOBAL --- */
+    :root {
+      --bg-main: #f0f7f4;
+      --white: #ffffff;
+      --emerald-50: #ecfdf5;
+      --emerald-100: #d1fae5;
+      --emerald-500: #10b981;
+      --emerald-600: #059669;
+      --emerald-700: #047857;
+      --emerald-800: #065f46;
+      --blue-50: #eff6ff;
+      --blue-100: #dbeafe;
+      --blue-700: #1d4ed8;
+      --blue-800: #1e40af;
+      --cyan-50: #ecfeff;
+      --cyan-100: #cffafe;
+      --cyan-700: #0e7490;
+      --cyan-800: #155e75;
+      --indigo-50: #e0e7ff;
+      --indigo-100: #e0e7ff;
+      --indigo-700: #4338ca;
+      --indigo-800: #3730a3;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+    }
+
+    .calculator-section * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    .calculator-section {
+      background-color: var(--bg-main);
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .calculator-section .calculator-card {
+      max-width: 896px;
+      width: 100%;
+      background-color: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      padding: 32px;
+      margin: auto;
+    }
+
+    .calculator-section .calc-header {
+      margin-bottom: 32px;
+    }
+
+    .calculator-section .header-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .calculator-section .step-badge {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--emerald-600);
+      background-color: var(--emerald-50);
+      padding: 4px 12px;
+      border-radius: 9999px;
+    }
+
+    .calculator-section .subtitle {
+      font-size: 14px;
+      color: var(--gray-400);
+      font-weight: 500;
+    }
+
+    .calculator-section .progress-container {
+      width: 100%;
+      background-color: var(--gray-200);
+      height: 10px;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .calculator-section .progress-bar {
+      background-color: var(--emerald-500);
+      height: 100%;
+      width: 33.333%;
+      transition: all 0.5s ease-in-out;
+    }
+
+    .calculator-section #steps-container {
+      position: relative;
+      overflow: hidden;
+      min-height: 450px;
+    }
+    
+    .calculator-section .step-content {
+      width: 100%;
+      transition: all 0.5s ease-in-out;
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .calculator-section .step-content.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0);
+      position: relative;
+    }
+
+    .calculator-section .step-content.next-slide {
+      transform: translateX(100%);
+    }
+
+    .calculator-section .step-content.prev-slide {
+      transform: translateX(-100%);
+    }
+
+    .calculator-section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--gray-800);
+      line-height: 1.25;
+    }
+
+    .calculator-section .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .calculator-section label {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gray-700);
+    }
+
+    .calculator-section input[type="number"] {
+      width: 100%;
+      font-size: 20px;
+      padding: 16px;
+      border: 2px solid var(--gray-300);
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .calculator-section input[type="number"]:focus {
+      border-color: var(--emerald-500);
+    }
+
+    .calculator-section .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .calculator-section .gender-btn {
+      background-color: var(--white);
+      border: 2px solid var(--gray-300);
+      border-radius: 16px;
+      padding: 24px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .calculator-section .gender-btn:hover {
+      border-color: var(--emerald-500);
+    }
+
+    .calculator-section .gender-btn.active-gender {
+      background-color: var(--emerald-50);
+      border: 3px solid var(--emerald-500);
+      color: var(--emerald-700);
+      font-weight: 900;
+      box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .calculator-section .activity-btn {
+      width: 100%;
+      text-align: left;
+      background-color: var(--white);
+      border: 2px solid var(--gray-300);
+      border-radius: 16px;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+    }
+
+    .calculator-section .activity-btn:hover {
+      border-color: var(--emerald-500);
+    }
+
+    .calculator-section .activity-btn.active-activity {
+      background-color: var(--emerald-50);
+      border: 3px solid var(--emerald-500);
+      color: var(--emerald-800);
+      font-weight: 900;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .calculator-section .badge-alpha {
+      background-color: var(--gray-100);
+      color: var(--gray-800);
+      border-radius: 9999px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .calculator-section .result-title {
+      text-align: center;
+    }
+
+    .calculator-section .result-title h2 {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--emerald-600);
+    }
+
+    .calculator-section .result-title p {
+      color: var(--gray-500);
+      font-size: 18px;
+      margin-top: 8px;
+    }
+
+    .calculator-section .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .calculator-section .card-result {
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid;
+    }
+
+    .calculator-section .card-result span {
+      font-size: 30px;
+    }
+
+    .calculator-section .card-result h4 {
+      color: var(--gray-500);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .calculator-section .card-result .res-value {
+      font-size: 30px;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .calculator-section .card-result .res-desc {
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .calculator-section .c-emerald { background-color: var(--emerald-50); border-color: var(--emerald-100); color: var(--emerald-800); }
+    .calculator-section .c-emerald .res-desc { color: var(--emerald-700); }
+    
+    .calculator-section .c-blue { background-color: var(--blue-50); border-color: var(--blue-100); color: var(--blue-800); }
+    .calculator-section .c-blue .res-desc { color: var(--blue-700); }
+
+    .calculator-section .c-cyan { background-color: var(--cyan-50); border-color: var(--cyan-100); color: var(--cyan-800); }
+    .calculator-section .c-cyan .res-desc { color: var(--cyan-700); }
+
+    .calculator-section .c-indigo { background-color: var(--indigo-50); border-color: var(--indigo-100); color: var(--indigo-800); }
+    .calculator-section .c-indigo .res-desc { color: var(--indigo-700); }
+
+    .calculator-section .guide-box {
+      background-color: var(--gray-50);
+      padding: 32px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .calculator-section .guide-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+    }
+    
+    .calculator-section .guide-desc {
+      color: var(--gray-700);
+      line-height: 1.6;
+      font-size: 18px;
+    }
+
+    .calculator-section .guide-list {
+      list-style: none;
+      background-color: var(--white);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--gray-100);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 16px;
+    }
+
+    .calculator-section .guide-list li::before {
+      content: "• ";
+      color: var(--gray-400);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+    }
+
+    .calculator-section .calc-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+    }
+
+    .calculator-section .btn-main {
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-size: 16px;
+    }
+
+    .calculator-section .btn-next {
+      background-color: var(--emerald-600);
+      color: var(--white);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .calculator-section .btn-next:hover { background-color: var(--emerald-700); }
+
+    .calculator-section .btn-back {
+      background-color: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    .calculator-section .btn-back:hover { background-color: var(--gray-200); }
+
+    .calculator-section .btn-reset {
+      width: 100%;
+      background-color: var(--emerald-600);
+      color: var(--white);
+      font-size: 20px;
+      font-weight: 700;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transition: transform 0.1s;
+    }
+
+    .calculator-section .btn-reset:active {
+      transform: scale(0.98);
+    }
+
+    .calculator-section .hidden { display: none !important; }
+    .calculator-section .invisible { visibility: hidden; }
+    .calculator-section .text-emerald-highlight { color: var(--emerald-700); font-weight: 700; }
+
+    @media (max-width: 768px) {
+      .calculator-section body { padding: 16px; }
+      .calculator-section .calculator-card { padding: 24px; }
+      .calculator-section h2 { font-size: 24px; }
+      .calculator-section .grid-2, .calculator-section .results-grid { grid-template-columns: 1fr; }
+      .calculator-section .result-title h2 { font-size: 28px; }
+      .calculator-section .guide-box { padding: 16px; }
+      .calculator-section .guide-desc { font-size: 16px; }
+      .calculator-section .guide-list { font-size: 14px; }
+    }
+  </style>
+
+  <section class="calculator-section">
+    <div class="calculator-card">
+      
+      <div id="calc-header" class="calc-header">
+        <div class="header-meta">
+          <span class="step-badge" id="step-badge">Langkah 1 dari 3</span>
+          <span class="subtitle">Personal Health Calculator</span>
+        </div>
+        <div class="progress-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+      </div>
+
+      <div id="steps-container">
+        
+        <div id="step-1" class="step-content active">
+          <h2>Halo! Pilih jenis kelamin dan isi umurmu dulu, yuk.</h2>
+          
+          <div class="grid-2">
+            <button type="button" onclick="selectGender('laki-laki')" id="gender-l" class="gender-btn">
+              ♂ Laki-Laki
+            </button>
+            <button type="button" onclick="selectGender('perempuan')" id="gender-p" class="gender-btn">
+              ♀ Perempuan
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label>Berapa umurmu sekarang? (Tahun)</label>
+            <input type="number" id="input-umur" placeholder="Contoh: 16">
+          </div>
+        </div>
+
+        <div id="step-2" class="step-content next-slide">
+          <h2>Berapa tinggi dan berat badanmu saat ini?</h2>
+          
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Tinggi Badan (cm)</label>
+              <input type="number" id="input-tinggi" placeholder="Contoh: 165">
+            </div>
+            <div class="form-group">
+              <label>Berat Badan (kg)</label>
+              <input type="number" id="input-berat" placeholder="Contoh: 55">
+            </div>
+          </div>
+        </div>
+
+        <div id="step-3" class="step-content next-slide">
+          <h2>Bagaimana tingkat aktivitas fisikmu setiap hari?</h2>
+          
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <button type="button" onclick="selectActivity(1.2, this)" class="activity-btn">
+              <span class="badge-alpha">A</span>
+              Jarang bergerak (Banyak rebahan/duduk belajar)
+            </button>
+            <button type="button" onclick="selectActivity(1.375, this)" class="activity-btn">
+              <span class="badge-alpha">B</span>
+              Aktivitas Ringan (Olahraga ringan 1-3 hari/minggu)
+            </button>
+            <button type="button" onclick="selectActivity(1.55, this)" class="activity-btn">
+              <span class="badge-alpha">C</span>
+              Aktivitas Sedang (Olahraga aktif 3-5 hari/minggu)
+            </button>
+          </div>
+        </div>
+
+        <div id="step-result" class="step-content next-slide" style="gap: 32px;">
+          <div class="result-title">
+            <h2>📊 Hasil Analisis Tubuhmu</h2>
+            <p>Berdasarkan kalkulasi ilmiah gizi harianmu</p>
+          </div>
+
+          <div class="results-grid">
+            <div class="card-result c-emerald">
+              <span>🔥</span>
+              <h4>Kebutuhan Energi Harian (TDEE)</h4>
+              <p class="res-value" id="res-kalori">0 Kcal</p>
+              <p class="res-desc">Energi ideal untuk mempertahankan berat badan sehat saat beraktivitas.</p>
+            </div>
+
+            <div class="card-result c-blue">
+              <span>⚖️</span>
+              <h4>Berat Badan Ideal Anda</h4>
+              <p class="res-value" id="res-bb-ideal">0 Kg</p>
+              <p class="res-desc" id="res-status-bmi">Status BMI saat ini: Menghitung...</p>
+            </div>
+
+            <div class="card-result c-cyan">
+              <span>💧</span>
+              <h4>Kebutuhan Hidrasi Harian</h4>
+              <p class="res-value" id="res-air">0 mL</p>
+              <p class="res-desc">Setara dengan sekitar <span id="res-gelas" style="font-weight: bold;">0</span> gelas air mineral berukuran 250ml per hari.</p>
+            </div>
+
+            <div class="card-result c-indigo">
+              <span>🌙</span>
+              <h4>Rekomendasi Waktu Tidur</h4>
+              <p class="res-value" id="res-tidur">0 Jam</p>
+              <p class="res-desc">Durasi tidur optimal untuk memaksimalkan regenerasi tubuh dan kecerdasan otak.</p>
+            </div>
+          </div>
+
+          <div class="guide-box">
+            <h3 class="guide-title"><span>💡</span>&nbsp;Panduan Diet & Menu Rekomendasi Gizi Seimbang:</h3>
+            <div class="guide-desc">
+              <p style="margin-bottom: 12px;">Untuk mencukupi target di atas, pastikan piring makanmu menerapkan prinsip <strong class="text-emerald-highlight">Isi Piringku</strong> (Karbohidrat kompleks, protein tinggi, lemak sehat, serta serat mikro).</p>
+              
+              <ul class="guide-list">
+                <li><strong>Sumber Karbohidrat Kompleks:</strong> Nasi merah, kentang rebus, oat, roti gandum (Menjaga energi awet seharian).</li>
+                <li><strong>Sumber Protein (Sangat Penting):</strong> Dada ayam, ikan, telur, tempe, tahu (Mempercepat pertumbuhan fisik & otot).</li>
+                <li><strong>Sumber Lemak Sehat:</strong> Alpukat, kacang-kacangan, minyak zaitun (Menjaga keseimbangan hormon remaja).</li>
+                <li><strong>Mikronutrien & Serat:</strong> Bayam, brokoli, wortel, buah jeruk, atau apel (Bagus buat daya tahan tubuh & kesehatan kulit).</li>
+              </ul>
+            </div>
+          </div>
+
+          <button onclick="resetCalculator()" class="btn-reset">
+            🔄 Hitung Ulang Data Baru
+          </button>
+        </div>
+
+      </div>
+
+      <div id="calc-footer" class="calc-footer">
+        <button id="prev-btn" onclick="goBack()" class="btn-main btn-back invisible">
+          ← Kembali
+        </button>
+        <button id="next-btn" onclick="goNext()" class="btn-main btn-next">
+          Lanjut →
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <script>
+    // State Simpan Data User
+    let currentStep = 1;
+    let userData = {
+      gender: '',
+      umur: 0,
+      tinggi: 0,
+      berat: 0,
+      activityFactor: 0
+    };
+
+    // Fungsi Pilih Jenis Kelamin
+    function selectGender(type) {
+      userData.gender = type;
+      
+      // Reset Style Tombol
+      document.getElementById('gender-l').className = 'gender-btn';
+      document.getElementById('gender-p').className = 'gender-btn';
+
+      // Beri Highlight Aktif
+      if(type === 'laki-laki') {
+        document.getElementById('gender-l').className = 'gender-btn active-gender';
+      } else {
+        document.getElementById('gender-p').className = 'gender-btn active-gender';
+      }
+    }
+
+    // Fungsi Pilih Aktivitas
+    function selectActivity(factor, element) {
+      userData.activityFactor = factor;
+      
+      // Reset semua tombol aktivitas
+      document.querySelectorAll('.activity-btn').forEach(btn => {
+        btn.className = 'activity-btn';
+      });
+
+      // Set tombol yang diklik jadi aktif
+      element.className = 'activity-btn active-activity';
+    }
+
+    // Navigasi Maju Langkah Kuis/Form
+    function goNext() {
+      // Validasi Step 1
+      if (currentStep === 1) {
+        const umurInput = parseInt(document.getElementById('input-umur').value);
+        if (!userData.gender) {
+          alert("Silakan pilih Jenis Kelamin terlebih dahulu bray!");
+          return;
+        }
+        if (!umurInput || umurInput <= 0) {
+          alert("Harap masukkan umur valid kamu ya!");
+          return;
+        }
+        userData.umur = umurInput;
+      }
+
+      // Validasi Step 2
+      if (currentStep === 2) {
+        const tinggiInput = parseFloat(document.getElementById('input-tinggi').value);
+        const beratInput = parseFloat(document.getElementById('input-berat').value);
+        if (!tinggiInput || tinggiInput <= 30 || !beratInput || beratInput <= 5) {
+          alert("Isi data tinggi badan dan berat badan yang masuk akal ya bray!");
+          return;
+        }
+        userData.tinggi = tinggiInput;
+        userData.berat = beratInput;
+      }
+
+      // Validasi Step 3 dan Transisi ke Hasil Analisis
+      if (currentStep === 3) {
+        if (!userData.activityFactor) {
+          alert("Silakan pilih salah satu opsi aktivitas fisikmu harian!");
+          return;
+        }
+        
+        calculateResults();
+        
+        // Logika slide keluar untuk Step 3 dan masuk untuk Step Result
+        const currentEl = document.getElementById('step-3');
+        const resultEl = document.getElementById('step-result');
+        
+        currentEl.className = 'step-content prev-slide';
+        resultEl.className = 'step-content active';
+        
+        // Efek memudar halus untuk menyembunyikan header & footer
+        const header = document.getElementById('calc-header');
+        const footer = document.getElementById('calc-footer');
+        header.style.transition = "all 0.5s";
+        footer.style.transition = "all 0.5s";
+        header.style.opacity = "0";
+        footer.style.opacity = "0";
+        
+        setTimeout(() => {
+          header.classList.add('hidden');
+          footer.classList.add('hidden');
+        }, 500);
+        
+        currentStep = 4; 
+        return;
+      }
+
+      currentStep++;
+      updateStepUI();
+    }
+
+    // Navigasi Mundur Langkah
+    function goBack() {
+      if (currentStep > 1 && currentStep <= 3) {
+        currentStep--;
+        updateStepUI();
+      }
+    }
+
+    // Update Tampilan Berdasarkan Step Aktif dengan Animasi Slide
+    function updateStepUI() {
+      for (let i = 1; i <= 3; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (i < currentStep) {
+          el.className = 'step-content prev-slide';
+        } else if (i === currentStep) {
+          el.className = 'step-content active';
+        } else {
+          el.className = 'step-content next-slide';
+        }
+      }
+
+      // Update progress bar & text badge atas ala kuis
+      document.getElementById('step-badge').innerText = `Langkah ${currentStep} dari 3`;
+      document.getElementById('progress-bar').style.width = `${(currentStep / 3) * 100}%`;
+
+      // Atur visibilitas tombol kembali
+      if (currentStep === 1) {
+        document.getElementById('prev-btn').classList.add('invisible');
+      } else {
+        document.getElementById('prev-btn').classList.remove('invisible');
+      }
+    }
+
+    // LOGIKA PERHITUNGAN GIZI, KALORI, AIR, DAN JAM TIDUR
+    function calculateResults() {
+      const { berat, tinggi, umur, gender, activityFactor } = userData;
+
+      // 1. Rumus BMR (Mifflin-St Jeor) & Kalori Harian (TDEE)
+      let bmr = 0;
+      if (gender === 'laki-laki') {
+        bmr = (10 * berat) + (6.25 * tinggi) - (5 * umur) + 5;
+      } else {
+        bmr = (10 * berat) + (6.25 * tinggi) - (5 * umur) - 161;
+      }
+      const tdee = Math.round(bmr * activityFactor);
+      document.getElementById('res-kalori').innerText = `${tdee} Kcal / hari`;
+
+      // 2. Kalkulasi Berat Badan Ideal (Rumus Broca Modifikasi)
+      let bbIdeal = (tinggi - 100) - ((tinggi - 100) * 0.10);
+      document.getElementById('res-bb-ideal').innerText = `${bbIdeal.toFixed(1)} Kg`;
+
+      // Tambahan Status Klasifikasi Massa Tubuh (BMI)
+      const bmi = berat / ((tinggi / 100) ** 2);
+      let statusBmi = "";
+      if (bmi < 18.5) statusBmi = "Berat kurang (Underweight) 🥦";
+      else if (bmi < 25) statusBmi = "Berat Normal Ideal (Healthy) ✨";
+      else statusBmi = "Kelebihan berat badan (Overweight) 🏃‍♂️";
+      document.getElementById('res-status-bmi').innerText = `Status BMI kamu saat ini: ${statusBmi}`;
+
+      // 3. Kebutuhan Hidrasi/Air (Metode Berat Badan Dasar)
+      const kebutuhanAir = Math.round(berat * 35);
+      const jumlahGelas = Math.round(kebutuhanAir / 250);
+      document.getElementById('res-air').innerText = `${kebutuhanAir} mL / hari`;
+      document.getElementById('res-gelas').innerText = jumlahGelas;
+
+      // 4. Rekomendasi Jam Tidur
+      let jamTidurs = "8 - 10"; 
+      if (umur > 18) {
+        jamTidurs = "7 - 9"; 
+      }
+      document.getElementById('res-tidur').innerText = `${jamTidurs} Jam`;
+    }
+
+    // Reset Form Mengulang Dari Awal
+    function resetCalculator() {
+      currentStep = 1;
+      userData = { gender: '', umur: 0, tinggi: 0, berat: 0, activityFactor: 0 };
+      
+      // Reset semua field input
+      document.getElementById('input-umur').value = '';
+      document.getElementById('input-tinggi').value = '';
+      document.getElementById('input-berat').value = '';
+      
+      // Munculkan kembali header & footer
+      const header = document.getElementById('calc-header');
+      const footer = document.getElementById('calc-footer');
+      header.classList.remove('hidden');
+      footer.classList.remove('hidden');
+      setTimeout(() => {
+        header.style.opacity = "1";
+        footer.style.opacity = "1";
+      }, 50);
+
+      // Kembalikan slide result ke kanan luar
+      document.getElementById('step-result').className = 'step-content next-slide';
+
+      // Reset tampilan tombol gender & aktivitas
+      document.getElementById('gender-l').className = 'gender-btn';
+      document.getElementById('gender-p').className = 'gender-btn';
+      document.querySelectorAll('.activity-btn').forEach(btn => {
+        btn.className = 'activity-btn';
+      });
+
+      updateStepUI();
+    }
+  </script>
+
+  <style>
+    /* Reset dasar */
+    .slider-section * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .slider-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+
+    /* Container Utama Berfungsi sebagai Jendela Slider */
+    .slider-section .container {
+      position: relative;
+      max-width: 950px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      overflow: hidden; /* Menyembunyikan slide yang belum aktif */
+    }
+
+    /* Wrapper Horizontal Utama */
+    .slider-section .slider-wrapper {
+      display: flex;
+      width: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Menyembunyikan scrollbar browser */
+    .slider-section .slider-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Struktur Satu Paket Slide (1 Slide = Kiri TikTok, Kanan Teks) */
+    .slider-section .slide-item {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      display: flex;
+      padding: 40px;
+      gap: 40px;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* Card Kiri (TikTok) */
+    .slider-section .card-tiktok {
+      flex: 1;
+      max-width: 340px;
+      min-width: 300px;
+      height: 570px;
+      background-color: #f1f1f1;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    /* Pengaturan text kanan */
+    .slider-section .content-text {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slider-section .content-text h2 {
+      font-size: 2.5rem;
+      color: #3b7a30;
+      font-weight: 700;
+    }
+
+    .slider-section .content-text p {
+      font-size: 1rem;
+      color: #557c4e;
+      line-height: 1.6;
+    }
+
+    /* Tombol Hijau */
+    .slider-section .btn-more {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: #438237;
+      color: white;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      width: max-content;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .slider-section .btn-more:hover {
+      background-color: #35662b;
+    }
+
+    /* Tombol Navigasi Panah */
+    .slider-section .nav-arrow {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 45px;
+      height: 45px;
+      background-color: rgba(224, 224, 224, 0.9);
+      border: none;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      color: #333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: background 0.2s, transform 0.2s;
+      z-index: 10;
+    }
+
+    .slider-section .nav-arrow:hover {
+      background-color: #d0d0d0;
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    /* Responsif Layar Smartphone */
+    @media (max-width: 768px) {
+      .slider-section .slide-item {
+        flex-direction: column;
+        padding: 20px;
+        gap: 24px;
+      }
+
+      .slider-section .card-tiktok {
+        max-width: 100%;
+        width: 100%;
+        height: 520px;
+      }
+
+      .slider-section .nav-arrow {
+        display: none; /* Di HP cukup di-swipe layar ke kanan/kiri */
+      }
+      
+      .slider-section .content-text h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+
+  <section class="slider-section">
+    <div class="container">
+      <div class="slider-wrapper">
+        
+        <div class="slide-item">
+          <div class="card-tiktok">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@tribunnews/video/7647784336103607559" data-video-id="7647784336103607559"> 
+              <section><a target="_blank" href="https://www.tiktok.com/@tribunnews?refer=embed">@tribunnews</a></section> 
+            </blockquote> 
+          </div>
+          <div class="content-text">
+            <h2>Body & Growth</h2>
+            <p>Perubahan suasana hati saat pubertas itu wajar. Yang penting, jangan dipendam sendiri. Menurut kamu, kegiatan apa yang paling membantu saat lagi stres?</p>
+            <p>Simak edukasi lengkap mengenai pentingnya menjaga kestabilan emosional di masa pertumbuhan remaja.</p>
+            <a href="https://www.tiktok.com/@tribunnews/video/7647784336103607559" target="_blank" class="btn-more">
+              Lihat selengkapnya &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="slide-item">
+          <div class="card-tiktok">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@4mliia_/video/7482643434864414007?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" data-video-id="7482643434864414007"> 
+              <section><a target="_blank" href="https://www.tiktok.com/@4mliia_?refer=embed">@4mliia_</a></section> 
+            </blockquote> 
+          </div>
+          <div class="content-text">
+            <h2>Judul Konten Kedua</h2>
+            <p>Ini adalah deskripsi khusus untuk video kedua. Kamu bisa menjelaskan poin penting atau rangkuman isi video TikTok yang kedua di sini agar menarik perhatian audiens.</p>
+            <p>Informasi tambahan yang relevan dengan topik pertumbuhan fisik ataupun mental generasi muda saat ini.</p>
+            <a href="https://www.tiktok.com/@4mliia_/video/7482643434864414007?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" target="_blank" class="btn-more">
+              Lihat selengkapnya &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="slide-item">
+          <div class="card-tiktok">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@adityaspratamaa/video/7496782098745920774?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" data-video-id="7496782098745920774"> 
+              <section><a target="_blank" href="https://www.tiktok.com/@adityaspratamaa?refer=embed">@adityaspratamaa</a></section> 
+            </blockquote> 
+          </div>
+          <div class="content-text">
+            <h2>Judul Konten Ketiga</h2>
+            <p>Isi penjelasan unik untuk video ketiga. Menjelaskan tentang faktor lingkungan atau kebiasaan sehat sehari-hari yang menunjang perkembangan tubuh secara maksimal.</p>
+            <a href="https://www.tiktok.com/@adityaspratamaa/video/7496782098745920774?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" target="_blank" class="btn-more">
+              Lihat selengkapnya &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="slide-item">
+          <div class="card-tiktok">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@suaradotcom/video/7643419201788497160?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" data-video-id="7643419201788497160"> 
+              <section><a target="_blank" href="https://www.tiktok.com/@suaradotcom?refer=embed">@suaradotcom</a></section> 
+            </blockquote> 
+          </div>
+          <div class="content-text">
+            <h2>Judul Konten Keempat</h2>
+            <p>Deskripsi penjelasan mendalam untuk video keempat Anda. Sangat fleksibel dan bisa disesuaikan dengan kampanye kesehatan atau konten edukasi teranyar Anda.</p>
+            <a href="https://www.tiktok.com/@suaradotcom/video/7643419201788497160?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" target="_blank" class="btn-more">
+              Lihat selengkapnya &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="slide-item">
+          <div class="card-tiktok">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@kwardajateng/video/7537587333537762576?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" data-video-id="7537587333537762576"> 
+              <section><a target="_blank" href="https://www.tiktok.com/@kwardajateng?refer=embed">@kwardajateng</a></section> 
+            </blockquote> 
+          </div>
+          <div class="content-text">
+            <h2>Judul Konten Kelima</h2>
+            <p>Teks deskripsi penjelasan kelima. Menghubungkan langsung antara pesan visual di TikTok dengan literasi teks yang informatif bagi para pembaca setia web Anda.</p>
+            <a href="https://www.tiktok.com/@kwardajateng/video/7537587333537762576?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" target="_blank" class="btn-more">
+              Lihat selengkapnya &rarr;
+            </a>
+          </div>
+        </div>
+
+        <div class="slide-item">
+          <div class="card-tiktok">
+            <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@f_rame3/video/7627134455936781575?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" data-video-id="7627134455936781575"> 
+              <section><a target="_blank" href="https://www.tiktok.com/@f_rame3?refer=embed">@f_rame3</a></section> 
+            </blockquote> 
+          </div>
+          <div class="content-text">
+            <h2>Judul Konten Keenam</h2>
+            <p>Penjelasan akhir untuk konten keenam. Penutup dari rangkaian slide video edukasi mengenai pertumbuhan, perkembangan remaja, dan cara menjaga kesehatan secara holistik.</p>
+            <a href="https://www.tiktok.com/@f_rame3/video/7627134455936781575?is_from_webapp=1&sender_device=pc&web_id=7626199003382056468" target="_blank" class="btn-more">
+              Lihat selengkapnya &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <button class="nav-arrow">&rarr;</button>
+    </div>
+  </section>
+
+
+
+  <script async src="https://www.tiktok.com/embed.js"></script>
+
+  <script>
+    const sliderWrapper = document.querySelector('.slider-section .slider-wrapper');
+    const navArrow = document.querySelector('.slider-section .nav-arrow');
+
+    if (navArrow) {
+      navArrow.addEventListener('click', () => {
+        // Mengambil lebar container window penuh (1 slide item)
+        const slideWidth = sliderWrapper.clientWidth;
+        
+        // Cek batas maksimum scroll kanan
+        const maxScrollLeft = sliderWrapper.scrollWidth - sliderWrapper.clientWidth;
+
+        // Jika posisi scroll sudah mencapai ujung kanan (slide ke-6)
+        if (sliderWrapper.scrollLeft >= maxScrollLeft - 5) {
+          // Reset kembali mulus ke slide ke-1
+          sliderWrapper.scrollTo({
+            left: 0,
+            behavior: 'smooth'
+          });
+        } else {
+          // Geser maju sejauh 1 slide penuh ke kanan
+          sliderWrapper.scrollBy({
+            left: slideWidth,
+            behavior: 'smooth'
+          });
+        }
+      });
+    }
+  </script>
+
+  <style>
+    /* ==================== TOPICS SECTION - GRID & MODAL ==================== */
+    .topics-section {
+      background-color: #f9f9f9;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .topics-container {
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .topics-title {
+      font-size: 2rem;
+      color: #3b7a30;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .topics-card {
+      background-color: #d9d9d9;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid #ccc;
+    }
+
+    .topics-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .topics-card-img-wrapper {
+      width: 100%;
+      height: 180px;
+      overflow: hidden;
+      background-color: #eee;
+    }
+
+    .topics-card-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .topics-card-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+    }
+
+    .topics-card-content h3 {
+      font-size: 1.1rem;
+      color: #000000;
+      font-weight: 700;
+    }
+
+    .topics-card-content p {
+      font-size: 0.95rem;
+      color: #333333;
+      line-height: 1.5;
+    }
+
+    /* ==================== MODAL STYLING ==================== */
+    .topics-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .topics-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .topics-modal-box {
+      background-color: #ffffff;
+      width: 90%;
+      max-width: 550px;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+      padding-bottom: 25px;
+    }
+
+    .topics-modal-overlay.active .topics-modal-box {
+      transform: scale(1);
+    }
+
+    .topics-modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2rem;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.4);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    .topics-modal-close-btn:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .topics-modal-img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .topics-modal-body {
+      padding: 25px;
+    }
+
+    .topics-modal-body h2 {
+      font-size: 1.6rem;
+      color: #3b7a30;
+      margin-bottom: 15px;
+    }
+
+    .topics-modal-body p {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .topics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .topics-grid {
+        grid-template-columns: 1fr;
+      }
+      .topics-title {
+        text-align: center;
+      }
+    }
+  </style>
+
+  <section class="topics-section">
+    <div class="topics-container">
+      <h2 class="topics-title">Jelajahi Topik Lain</h2>
+
+      <div class="topics-grid" id="topicsGridContainer">
+      </div>
+    </div>
+  </section>
+
+  <div class="topics-modal-overlay" id="topicsModalOverlay">
+    <div class="topics-modal-box">
+      <button class="topics-modal-close-btn" id="topicsCloseBtn">&times;</button>
+      <img src="" alt="Gambar Artikel" class="topics-modal-img" id="topicsModalImg">
+      <div class="topics-modal-body">
+        <h2 id="topicsModalTitle">Judul Artikel</h2>
+        <p id="topicsModalDesc">Penjelasan lengkap artikel...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data Konten Artikel Topik
+    const topicsArticlesData = [
+      {
+        title: "Fisik & Pubertas",
+        shortDesc: "edukasi perubahan biologis dan anatomi tubuh yang terjadi selama masa transisi remaja...",
+        longDesc: "Edukasi perubahan biologis dan anatomi tubuh yang terjadi selama masa transisi remaja secara mendalam. Topik ini membahas perubahan hormon, lonjakan pertumbuhan tinggi badan, perkembangan organ reproduksi, serta cara menyikapi perubahan fisik tersebut secara positif tanpa rasa cemas.",
+        image: "assets/images/pubertas.jpg"
+      },
+      {
+        title: "Kesehatan Mental & Emosi",
+        shortDesc: "menjaga kesejahteraan psikologis bagi remaja...",
+        longDesc: "Menjaga kesejahteraan psikologis bagi remaja merupakan fondasi utama kebahagiaan. Di sini dibahas mengenai cara mengelola stres saat ujian, memahami perubahan suasana hati (mood swings), mengenali tanda depresi dini, dan bagaimana cara berdiskusi dengan orang tua atau profesional jika membutuhkan bantuan emosional.",
+        image: "assets/images/kesehatan_mental.jpg"
+      },
+      {
+        title: "Nutrisi & Kebugaran",
+        shortDesc: "pembentukan gaya hidup sehat melalui asupan nutrisi yang tepat dan aktivitas fisik yang teratur...",
+        longDesc: "Pembentukan gaya hidup sehat melalui asupan nutrisi yang tepat dan aktivitas fisik yang teratur. Temukan panduan porsi makan seimbang (Isi Piringku), pentingnya hidrasi cairan tubuh, serta rekomendasi olahraga harian sederhana yang bisa dilakukan di rumah demi menjaga stamina dan kebugaran tubuh.",
+        image: "assets/images/nutrisi_kebugaran.jpg"
+      },
+      {
+        title: "Kesehatan Digital",
+        shortDesc: "penggunaan teknologi dengan kesehatan holistik remaja...",
+        longDesc: "Menyelaraskan penggunaan teknologi harian dengan kesehatan holistik remaja. Bagian ini mengulas cara mendeteksi kecanduan gadget (screen time berlebih), gangguan pola tidur akibat paparan radiasi layar di malam hari, serta tips melakukan digital detox secara berkala.",
+        image: "assets/images/kesehatan_digital.jpg"
+      },
+      {
+        title: "Literasi Digital Sehat",
+        shortDesc: "Membantu remaja menggunakan media sosial dan teknologi secara bijak...",
+        longDesc: "Membantu remaja menggunakan media sosial dan teknologi secara bijak. Berfokus pada edukasi etika berkomunikasi di internet, cara menghindari bahaya cyberbullying, menyaring berita hoax, serta taktik menjaga kerahasiaan dan keamanan data pribadi di berbagai platform media sosial.",
+        image: "assets/images/literasi_digital.jpg"
+      },
+      {
+        title: "Nutrisi & Pola Makan",
+        shortDesc: "pentingnya asupan gizi yang tepat untuk mendukung pertumbuhan remaja, meningkatkan energi...",
+        longDesc: "Pentingnya asupan gizi makro dan mikro yang tepat untuk mendukung akselerasi pertumbuhan remaja, memaksimalkan perkembangan kognitif otak, serta meningkatkan cadangan energi harian agar fokus belajar tetap terjaga sepanjang hari tanpa mudah lelah.",
+        image: "assets/images/nutrisi_pola_makan.jpg"
+      }
+    ];
+
+    const topicsGridContainer = document.getElementById('topicsGridContainer');
+    const topicsModalOverlay = document.getElementById('topicsModalOverlay');
+    const topicsCloseBtn = document.getElementById('topicsCloseBtn');
+    const topicsModalImg = document.getElementById('topicsModalImg');
+    const topicsModalTitle = document.getElementById('topicsModalTitle');
+    const topicsModalDesc = document.getElementById('topicsModalDesc');
+
+    // Render Cards
+    function renderTopicsCards() {
+      topicsArticlesData.forEach((article, index) => {
+        const card = document.createElement('div');
+        card.classList.add('topics-card');
+        
+        card.innerHTML = `
+          <div class="topics-card-img-wrapper">
+            <img src="${article.image}" alt="${article.title}">
+          </div>
+          <div class="topics-card-content">
+            <h3>${article.title}</h3>
+            <p>${article.shortDesc}</p>
+          </div>
+        `;
+
+        card.addEventListener('click', () => openTopicsModal(index));
+        topicsGridContainer.appendChild(card);
+      });
+    }
+
+    // Buka Modal
+    function openTopicsModal(index) {
+      const data = topicsArticlesData[index];
+      topicsModalImg.src = data.image;
+      topicsModalTitle.textContent = data.title;
+      topicsModalDesc.textContent = data.longDesc;
+      topicsModalOverlay.classList.add('active');
+    }
+
+    // Tutup Modal
+    function closeTopicsModal() {
+      topicsModalOverlay.classList.remove('active');
+    }
+
+    topicsCloseBtn.addEventListener('click', closeTopicsModal);
+    topicsModalOverlay.addEventListener('click', (e) => {
+      if (e.target === topicsModalOverlay) {
+        closeTopicsModal();
+      }
+    });
+
+    // Render saat halaman dimuat
+    renderTopicsCards();
+  </script>
+
+  
+  <footer class="footer" id="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <img src="assets/logo/logo_marihat.png" alt="MARIHAT" class="footer-logo" />
+        <p class="footer-tagline">Mari Sehat Bersama – platform edukasi kesehatan remaja Indonesia.</p>
+      </div>
+      <div class="footer-copy">
+        © 2025 MARIHAT. Hak cipta dilindungi undang-undang.
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

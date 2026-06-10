@@ -12,6 +12,331 @@
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz-section {
+      width: 100%;
+      background: #f0f7f4;
+      color: #1a1a1a;
+      padding: 4rem 2rem 6rem;
+    }
+
+    .quiz-section .quiz-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .quiz-section .quiz-headline {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-section .quiz-headline .eyebrow {
+      display: inline-block;
+      margin-bottom: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      font-size: .85rem;
+      font-weight: 700;
+      color: #2e7d32;
+    }
+
+    .quiz-section .quiz-headline h2 {
+      font-size: clamp(2rem, 3.5vw, 3.5rem);
+      line-height: 1.05;
+      margin-bottom: .75rem;
+      font-weight: 800;
+    }
+
+    .quiz-section .quiz-headline p {
+      color: #4f5c5a;
+      max-width: 780px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .quiz-section .progress-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 40px;
+      width: 100%;
+    }
+
+    .quiz-section .progress-bar {
+      height: 10px;
+      flex: 1;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .quiz-section .progress-bar.active {
+      background-color: #4caf50;
+    }
+
+    .quiz-section .quiz-screen {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 620px;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    }
+
+    .quiz-section .slide-wrapper {
+      display: flex;
+      width: 300%;
+      max-width: 4200px;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      flex: 1;
+    }
+
+    .quiz-section .slide-page {
+      width: 33.333%;
+      flex-shrink: 0;
+      transition: opacity 0.4s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px;
+      min-height: 520px;
+    }
+
+    .quiz-section .question-page { opacity: 1; }
+    .quiz-section .meme-page,
+    .quiz-section .explanation-page { opacity: 0; pointer-events: none; }
+
+    .quiz-section .slide-wrapper.show-meme {
+      transform: translateX(-33.333%);
+    }
+
+    .quiz-section .slide-wrapper.show-meme .question-page { opacity: 0; }
+    .quiz-section .slide-wrapper.show-meme .meme-page { opacity: 1; pointer-events: auto; }
+
+    .quiz-section .slide-wrapper.show-explanation {
+      transform: translateX(-66.666%);
+    }
+
+    .quiz-section .slide-wrapper.show-explanation .question-page { opacity: 0; }
+    .quiz-section .slide-wrapper.show-explanation .meme-page { opacity: 0; }
+    .quiz-section .slide-wrapper.show-explanation .explanation-page { opacity: 1; pointer-events: auto; }
+
+    .quiz-section .quiz-header {
+      font-size: 22px;
+      color: #666;
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .quiz-section .question {
+      font-size: clamp(2.3rem, 4vw, 3.2rem);
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 50px;
+      line-height: 1.3;
+      letter-spacing: -1px;
+      max-width: 1300px;
+    }
+
+    .quiz-section .options-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .quiz-section .options-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .quiz-section .option-btn {
+      border: none;
+      border-radius: 30px;
+      padding: 30px;
+      font-size: 28px;
+      font-weight: 900;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .quiz-section .btn-fakta { background-color: #2e7d32; }
+    .quiz-section .btn-fakta:hover:not(:disabled) {
+      background-color: #1b5e20;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(46, 125, 50, 0.3);
+    }
+
+    .quiz-section .btn-mitos { background-color: #d32f2f; }
+    .quiz-section .btn-mitos:hover:not(:disabled) {
+      background-color: #c62828;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(211, 47, 47, 0.3);
+    }
+
+    .quiz-section .option-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .quiz-section .option-btn.correct-active {
+      background-color: #4caf50 !important;
+      opacity: 1 !important;
+      animation: pulseCorrect 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulseCorrect {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+      100% { transform: scale(1.04); box-shadow: 0 0 25px 15px rgba(76, 175, 80, 0); }
+    }
+
+    .quiz-section .option-btn.wrong-active {
+      background-color: #ff5252 !important;
+      opacity: 1 !important;
+      animation: shakeWrong 0.4s ease-in-out;
+    }
+
+    @keyframes shakeWrong {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-12px); }
+      40%, 80% { transform: translateX(12px); }
+    }
+
+    .quiz-section .meme-status-text {
+      font-size: 42px;
+      font-weight: 900;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .quiz-section .text-correct { color: #4caf50; }
+    .quiz-section .text-wrong { color: #f44336; }
+
+    .quiz-section .meme-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .quiz-section .meme-sticker {
+      width: 100%;
+      max-width: 380px;
+      height: 380px;
+      object-fit: cover;
+      border-radius: 24px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+
+    .quiz-section .meme-timer-text {
+      text-align: center;
+      font-size: 20px;
+      color: #666;
+      font-style: italic;
+    }
+
+    .quiz-section .explanation-title {
+      font-weight: 800;
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      color: #1a1a1a;
+      margin-bottom: 30px;
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .quiz-section .explanation-text {
+      font-size: 1.1rem;
+      color: #222;
+      line-height: 1.7;
+      background: #ffffff;
+      padding: 35px;
+      border-radius: 24px;
+      max-width: 1200px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      margin: 0 auto;
+    }
+
+    .quiz-section .footer-controls {
+      display: flex;
+      justify-content: flex-end;
+      max-width: 1200px;
+      width: 100%;
+      margin: 40px auto 0;
+    }
+
+    .quiz-section .next-btn {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 18px 45px;
+      border-radius: 40px;
+      font-weight: bold;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 8px 15px rgba(46, 125, 50, 0.2);
+    }
+
+    .quiz-section .next-btn:hover {
+      background-color: #1b5e20;
+      transform: scale(1.03);
+    }
+
+    .quiz-section .result-screen {
+      text-align: center;
+      display: none;
+      margin-top: 2rem;
+    }
+
+    .quiz-section .result-screen h2 {
+      font-size: clamp(2.6rem, 4vw, 4.8rem);
+      margin-bottom: 20px;
+    }
+
+    .quiz-section .result-score {
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 900;
+      color: #4caf50;
+      margin: 40px 0;
+    }
+
+    .quiz-section .result-screen p {
+      font-size: 1.1rem;
+      color: #444;
+    }
+
+    .quiz-section .restart-btn {
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      padding: 16px 42px;
+      border-radius: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 28px;
+      transition: transform 0.2s;
+    }
+
+    .quiz-section .restart-btn:hover {
+      transform: scale(1.03);
+    }
+  </style>
 </head>
 
 <body>
@@ -217,6 +542,58 @@
 
     </div><!-- /.stack-container -->
 
+      <section style="width:100vw; min-height:100vh; height:100vh; background:#438136; color:#ffffff; display:flex; align-items:center; justify-content:center; user-select:none;">
+        <div style="text-align:center; padding:3rem 1.5rem; width:100%;">
+          <h1 style="margin:0; font-size:clamp(2.5rem, 4vw, 5rem); font-weight:800; letter-spacing:.05em;">
+            Mitos atau Fakta?
+          </h1>
+        </div>
+      </section>
+
+      
+
+      <section class="quiz-section" id="quiz-section">
+        <div class="quiz-container">
+          <div class="quiz-headline">
+          </div>
+
+          <div class="progress-container" id="progress-container"></div>
+
+          <div id="quiz-screen" class="quiz-screen">
+            <div class="slide-wrapper" id="slide-wrapper">
+              <div class="slide-page question-page" id="question-page">
+                <div class="quiz-header" id="quiz-header">Kategori Kuis</div>
+                <div class="question" id="question-text">Loading Soal...</div>
+                <div class="options-container" id="options-container"></div>
+              </div>
+
+              <div class="slide-page meme-page" id="meme-page">
+                <div class="meme-status-text" id="meme-status-text">KERJA BAGUS! 👍</div>
+                <div class="meme-wrapper">
+                  <img id="meme-sticker" class="meme-sticker" src="" alt="Meme Status">
+                </div>
+                <div class="meme-timer-text">Membuka penjelasan ilmiah...</div>
+              </div>
+
+              <div class="slide-page explanation-page" id="explanation-page">
+                <div class="explanation-title">💡 Penjelasan Ilmiah (Berdasarkan Riset):</div>
+                <p class="explanation-text" id="explanation-text">Detail penjelasan riset...</p>
+                <div class="footer-controls">
+                  <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next kuis (4s)</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="result-screen" id="result-screen">
+            <h2>Kuis Selesai! 🎉</h2>
+            <div class="result-score" id="final-score">0 / 5</div>
+            <p id="result-message">Hebat! Tetap kritis menyaring info kesehatan ya!</p>
+            <button class="restart-btn" onclick="restartQuiz()">Main Lagi</button>
+          </div>
+        </div>
+      </section>
   </main>
 
   <!-- ── FOOTER ── -->
@@ -233,6 +610,219 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    const quizData = [
+      {
+        category: "Kesehatan Kulit & Pola Makan",
+        question: "“Makan cokelat dan makanan manis pasti menjadi penyebab utama munculnya jerawat.”",
+        options: ["FAKTA", "MITOS"],
+        correct: 1,
+        explanation: "Menurut American Academy of Dermatology (AAD), cokelat tidak secara langsung menyebabkan jerawat. Penyebab utamanya adalah makanan dengan indeks glikemik tinggi (seperti gula berlebih) yang memicu lonjakan insulin dan produksi minyak di kulit, serta faktor genetik dan hormon saat pubertas."
+      },
+      {
+        category: "Tren Diet & Kesehatan Fisik",
+        question: "“Minum air lemon hangat di pagi hari dapat membakar lemak tubuh secara drastis.”",
+        options: ["FAKTA", "MITOS"],
+        correct: 1,
+        explanation: "Studi dari Harvard Medical School menyatakan tidak ada bukti ilmiah bahwa air lemon dapat membakar lemak atau mengecilkan lingkar pinggang. Air lemon baik untuk hidrasi dan sumber Vitamin C, namun penurunan berat badan hanya terjadi melalui defisit kalori dan olahraga teratur."
+      },
+      {
+        category: "Kebiasaan Tidur & Akhir Pekan",
+        question: "“Tidur seharian di hari Sabtu dan Minggu dapat menggantikan kekurangan tidur (sleep debt) akibat begadang selama hari sekolah.”",
+        options: ["FAKTA", "MITOS"],
+        correct: 1,
+        explanation: "Riset dari Current Biology (2019) menunjukkan bahwa 'balas dendam jam tidur' di akhir pekan tidak memulihkan gangguan metabolik dan fokus akibat kurang tidur kronis. Kebiasaan ini justru mengacaukan jam biologis tubuh (ritme sirkadian), membuat Anda lebih lemas di hari Senin (Monday Blues)."
+      },
+      {
+        category: "Kesehatan Mental & Emosi",
+        question: "“Seseorang yang mengalami gangguan kecemasan (anxiety) hanya perlu 'menenangkan pikiran' atau 'kurang rekreasi' agar bisa sembuh.”",
+        options: ["FAKTA", "MITOS"],
+        correct: 1,
+        explanation: "Berdasarkan laporan World Health Organization (WHO), gangguan kecemasan adalah kondisi medis nyata yang melibatkan ketidakseimbangan neurotransmiter di otak, faktor genetik, dan trauma psikologis. Kondisi ini membutuhkan validasi medis, terapi profesional (seperti CBT), dan bukan sekadar urusan 'kurang hiburan'."
+      },
+      {
+        category: "Penggunaan Gadget & Kesehatan Mata",
+        question: "“Paparan blue light dari layar smartphone di malam hari dapat mengganggu siklus tidur dan menurunkan kualitas istirahat.”",
+        options: ["FAKTA", "MITOS"],
+        correct: 0,
+        explanation: "Penelitian dari National Sleep Foundation membuktikan bahwa paparan cahaya biru dari gadget menghambat produksi hormon melatonin (hormon pemicu rasa kantuk). Akibatnya, otak tetap mengira situasi masih siang hari, sehingga Anda kesulitan tertidur dan mengalami penurunan kualitas tidur fase REM."
+      }
+    ];
+
+    const memes = {
+      correct: [
+        "assets/memes/benar.png",
+        "assets/memes/benar1.png",
+        "assets/memes/benar2.png"
+      ],
+      wrong: [
+        "assets/memes/salah.png",
+        "assets/memes/salah1.png",
+        "assets/memes/salah2.png"
+      ]
+    };
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let autoNextTimeout = null;
+    let countdownInterval = null;
+
+    function initQuiz() {
+      createProgressBar();
+      loadQuestion();
+    }
+
+    function createProgressBar() {
+      const container = document.getElementById('progress-container');
+      container.innerHTML = '';
+      quizData.forEach((_, index) => {
+        const bar = document.createElement('div');
+        bar.classList.add('progress-bar');
+        if (index === 0) bar.classList.add('active');
+        container.appendChild(bar);
+      });
+    }
+
+    function updateProgressBar() {
+      document.querySelectorAll('.quiz-section .progress-bar').forEach((bar, index) => {
+        bar.classList.toggle('active', index <= currentQuestionIndex);
+      });
+    }
+
+    function loadQuestion() {
+      clearTimeout(autoNextTimeout);
+      clearInterval(countdownInterval);
+
+      const wrapper = document.getElementById('slide-wrapper');
+      wrapper.classList.remove('show-meme', 'show-explanation');
+
+      const currentQuestion = quizData[currentQuestionIndex];
+      document.getElementById('quiz-header').innerText = `${currentQuestionIndex + 1} dari ${quizData.length} | ${currentQuestion.category}`;
+      document.getElementById('question-text').innerText = currentQuestion.question;
+
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      currentQuestion.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.classList.add('option-btn');
+        button.classList.add(option === 'FAKTA' ? 'btn-fakta' : 'btn-mitos');
+        button.innerText = option;
+        button.onclick = () => checkAnswer(index, button);
+        optionsContainer.appendChild(button);
+      });
+
+      updateProgressBar();
+    }
+
+    function checkAnswer(selectedIndex, selectedButton) {
+      const currentQuestion = quizData[currentQuestionIndex];
+      const allButtons = document.querySelectorAll('.quiz-section .option-btn');
+      const wrapper = document.getElementById('slide-wrapper');
+
+      allButtons.forEach(btn => btn.disabled = true);
+
+      const isCorrect = selectedIndex === currentQuestion.correct;
+      const memeStatusText = document.getElementById('meme-status-text');
+      const memeSticker = document.getElementById('meme-sticker');
+
+      if (isCorrect) {
+        score++;
+        selectedButton.classList.add('correct-active');
+        memeStatusText.innerText = 'JAWABAN TEPAT! 🧠⚡';
+        memeStatusText.className = 'meme-status-text text-correct';
+        memeSticker.src = memes.correct[Math.floor(Math.random() * memes.correct.length)];
+      } else {
+        selectedButton.classList.add('wrong-active');
+        allButtons[currentQuestion.correct].classList.add('correct-active');
+        memeStatusText.innerText = 'KURANG TEPAT! 🥹❌';
+        memeStatusText.className = 'meme-status-text text-wrong';
+        memeSticker.src = memes.wrong[Math.floor(Math.random() * memes.wrong.length)];
+      }
+
+      document.getElementById('explanation-text').innerText = currentQuestion.explanation;
+
+      setTimeout(() => {
+        wrapper.classList.add('show-meme');
+        setTimeout(() => {
+          wrapper.classList.remove('show-meme');
+          wrapper.classList.add('show-explanation');
+          startAutoNextTimer();
+        }, 3000);
+      }, 1000);
+    }
+
+    function startAutoNextTimer() {
+      let timeLeft = 4;
+      const nextBtn = document.getElementById('next-btn');
+      nextBtn.innerText = `Next kuis (${timeLeft}s)`;
+
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          nextBtn.innerText = `Next kuis (${timeLeft}s)`;
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 1000);
+
+      autoNextTimeout = setTimeout(() => nextQuestion(), 4000);
+    }
+
+    function nextQuestion() {
+      clearTimeout(autoNextTimeout);
+      clearInterval(countdownInterval);
+
+      const wrapper = document.getElementById('slide-wrapper');
+      wrapper.classList.remove('show-explanation');
+
+      setTimeout(() => {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }, 500);
+    }
+
+    function showResult() {
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('result-screen').style.display = 'block';
+      const finalScore = (score / quizData.length) * 100;
+      document.getElementById('final-score').innerText = `${score} / ${quizData.length} (Skor: ${finalScore})`;
+      const message = document.getElementById('result-message');
+      if (finalScore >= 80) {
+        message.innerText = 'Gokil! Kamu kritis banget, ga gampang termakan mitos kesehatan! 😎🔥';
+      } else if (finalScore >= 60) {
+        message.innerText = 'Keren! Pengetahuan kesehatanmu udah lumayan oke, yuk makin rajin baca riset! 👍🏃‍♂️';
+      } else {
+        message.innerText = 'Banyak info kesehatan di luar sana yang ternyata cuma mitos, yuk semangat belajar lagi! 🍎';
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      document.getElementById('quiz-screen').style.display = 'flex';
+      document.getElementById('result-screen').style.display = 'none';
+      createProgressBar();
+      loadQuestion();
+    }
+
+    function scrollToQuizSection(event) {
+      event.preventDefault();
+      document.getElementById('quiz-section')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('mobile-menu')?.classList.remove('open');
+    }
+
+    window.addEventListener('load', () => {
+      initQuiz();
+      document.getElementById('btn-quiz')?.addEventListener('click', scrollToQuizSection);
+      document.getElementById('nav-quiz')?.addEventListener('click', scrollToQuizSection);
+      document.getElementById('mob-quiz')?.addEventListener('click', scrollToQuizSection);
+    });
+  </script>
 </body>
 
 </html>

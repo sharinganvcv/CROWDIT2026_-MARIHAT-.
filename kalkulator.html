@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Gizi & Kesehatan Remaja</title>
+    <style>
+        /* --- KOSMETIK & VARIABEL GLOBAL --- */
+        :root {
+            --bg-main: #f0f7f4;
+            --white: #ffffff;
+            --emerald-50: #ecfdf5;
+            --emerald-100: #d1fae5;
+            --emerald-500: #10b981;
+            --emerald-600: #059669;
+            --emerald-700: #047857;
+            --emerald-800: #065f46;
+            --blue-50: #eff6ff;
+            --blue-100: #dbeafe;
+            --blue-700: #1d4ed8;
+            --blue-800: #1e40af;
+            --cyan-50: #ecfeff;
+            --cyan-100: #cffafe;
+            --cyan-700: #0e7490;
+            --cyan-800: #155e75;
+            --indigo-50: #e0e7ff;
+            --indigo-100: #e0e7ff;
+            --indigo-700: #4338ca;
+            --indigo-800: #3730a3;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- LAYOUT UTAMA --- */
+        .calculator-card {
+            max-width: 896px;
+            width: 100%;
+            background-color: var(--white);
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 32px;
+            margin: auto;
+        }
+
+        /* --- HEADER & PROGRESS BAR --- */
+        .calc-header {
+            margin-bottom: 32px;
+        }
+
+        .header-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .step-badge {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--emerald-600);
+            background-color: var(--emerald-50);
+            padding: 4px 12px;
+            border-radius: 9999px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--gray-400);
+            font-weight: 500;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: var(--gray-200);
+            height: 10px;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: var(--emerald-500);
+            height: 100%;
+            width: 33.333%;
+            transition: all 0.5s ease-in-out;
+        }
+
+        /* --- SLIDE TRANSISI ANIMASI --- */
+        #steps-container {
+            position: relative;
+            overflow: hidden;
+            min-height: 450px;
+        }
+        
+        .step-content {
+            width: 100%;
+            transition: all 0.5s ease-in-out;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .step-content.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+            position: relative;
+        }
+
+        .step-content.next-slide {
+            transform: translateX(100%);
+        }
+
+        .step-content.prev-slide {
+            transform: translateX(-100%);
+        }
+
+        /* --- TYPOGRAPHY & ELEMENT FORM --- */
+        h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gray-800);
+            line-height: 1.25;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            font-size: 20px;
+            padding: 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--emerald-500);
+        }
+
+        /* --- TOMBOL-TOMBOL PILIHAN --- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .gender-btn {
+            background-color: var(--white);
+            border: 2px solid var(--gray-300);
+            border-radius: 16px;
+            padding: 24px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gender-btn:hover {
+            border-color: var(--emerald-500);
+        }
+
+        /* State Gender Aktif */
+        .gender-btn.active-gender {
+            background-color: var(--emerald-50);
+            border: 3px solid var(--emerald-500);
+            color: var(--emerald-700);
+            font-weight: 900;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .activity-btn {
+            width: 100%;
+            text-align: left;
+            background-color: var(--white);
+            border: 2px solid var(--gray-300);
+            border-radius: 16px;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .activity-btn:hover {
+            border-color: var(--emerald-500);
+        }
+
+        /* State Aktivitas Aktif */
+        .activity-btn.active-activity {
+            background-color: var(--emerald-50);
+            border: 3px solid var(--emerald-500);
+            color: var(--emerald-800);
+            font-weight: 900;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .badge-alpha {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            border-radius: 9999px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        /* --- DASHBOARD HASIL --- */
+        .result-title {
+            text-align: center;
+        }
+
+        .result-title h2 {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--emerald-600);
+        }
+
+        .result-title p {
+            color: var(--gray-500);
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .card-result {
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid;
+        }
+
+        .card-result span {
+            font-size: 30px;
+        }
+
+        .card-result h4 {
+            color: var(--gray-500);
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .card-result .res-value {
+            font-size: 30px;
+            font-weight: 900;
+            margin-top: 4px;
+        }
+
+        .card-result .res-desc {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* Pewarnaan Card Dinamis */
+        .c-emerald { background-color: var(--emerald-50); border-color: var(--emerald-100); color: var(--emerald-800); }
+        .c-emerald .res-desc { color: var(--emerald-700); }
+        
+        .c-blue { background-color: var(--blue-50); border-color: var(--blue-100); color: var(--blue-800); }
+        .c-blue .res-desc { color: var(--blue-700); }
+
+        .c-cyan { background-color: var(--cyan-50); border-color: var(--cyan-100); color: var(--cyan-800); }
+        .c-cyan .res-desc { color: var(--cyan-700); }
+
+        .c-indigo { background-color: var(--indigo-50); border-color: var(--indigo-100); color: var(--indigo-800); }
+        .c-indigo .res-desc { color: var(--indigo-700); }
+
+        /* --- PANDUAN DIET --- */
+        .guide-box {
+            background-color: var(--gray-50);
+            padding: 32px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .guide-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+        }
+        
+        .guide-desc {
+            color: var(--gray-700);
+            line-height: 1.6;
+            font-size: 18px;
+        }
+
+        .guide-list {
+            list-style: none;
+            background-color: var(--white);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--gray-100);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 16px;
+        }
+
+        .guide-list li::before {
+            content: "• ";
+            color: var(--gray-400);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+        }
+
+        /* --- FOOTER & NAVIGASI ACTION --- */
+        .calc-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .btn-main {
+            font-weight: 700;
+            padding: 12px 32px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-size: 16px;
+        }
+
+        .btn-next {
+            background-color: var(--emerald-600);
+            color: var(--white);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-next:hover { background-color: var(--emerald-700); }
+
+        .btn-back {
+            background-color: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-back:hover { background-color: var(--gray-200); }
+
+        .btn-reset {
+            width: 100%;
+            background-color: var(--emerald-600);
+            color: var(--white);
+            font-size: 20px;
+            font-weight: 700;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.1s;
+        }
+
+        .btn-reset:active {
+            transform: scale(0.98);
+        }
+
+        /* --- UTILITY CLASSES --- */
+        .hidden { display: none !important; }
+        .invisible { visibility: hidden; }
+        .text-emerald-highlight { color: var(--emerald-700); font-weight: 700; }
+
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .calculator-card { padding: 24px; }
+            h2 { font-size: 24px; }
+            .grid-2, .results-grid { grid-template-columns: 1fr; }
+            .result-title h2 { font-size: 28px; }
+            .guide-box { padding: 16px; }
+            .guide-desc { font-size: 16px; }
+            .guide-list { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-card">
+        
+        <div id="calc-header" class="calc-header">
+            <div class="header-meta">
+                <span class="step-badge" id="step-badge">Langkah 1 dari 3</span>
+                <span class="subtitle">Personal Health Calculator</span>
+            </div>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+        </div>
+
+        <div id="steps-container">
+            
+            <div id="step-1" class="step-content active">
+                <h2>Halo! Pilih jenis kelamin dan isi umurmu dulu, yuk.</h2>
+                
+                <div class="grid-2">
+                    <button type="button" onclick="selectGender('laki-laki')" id="gender-l" class="gender-btn">
+                        ♂ Laki-Laki
+                    </button>
+                    <button type="button" onclick="selectGender('perempuan')" id="gender-p" class="gender-btn">
+                        ♀ Perempuan
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label>Berapa umurmu sekarang? (Tahun)</label>
+                    <input type="number" id="input-umur" placeholder="Contoh: 16">
+                </div>
+            </div>
+
+            <div id="step-2" class="step-content next-slide">
+                <h2>Berapa tinggi dan berat badanmu saat ini?</h2>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Tinggi Badan (cm)</label>
+                        <input type="number" id="input-tinggi" placeholder="Contoh: 165">
+                    </div>
+                    <div class="form-group">
+                        <label>Berat Badan (kg)</label>
+                        <input type="number" id="input-berat" placeholder="Contoh: 55">
+                    </div>
+                </div>
+            </div>
+
+            <div id="step-3" class="step-content next-slide">
+                <h2>Bagaimana tingkat aktivitas fisikmu setiap hari?</h2>
+                
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <button type="button" onclick="selectActivity(1.2, this)" class="activity-btn">
+                        <span class="badge-alpha">A</span>
+                        Jarang bergerak (Banyak rebahan/duduk belajar)
+                    </button>
+                    <button type="button" onclick="selectActivity(1.375, this)" class="activity-btn">
+                        <span class="badge-alpha">B</span>
+                        Aktivitas Ringan (Olahraga ringan 1-3 hari/minggu)
+                    </button>
+                    <button type="button" onclick="selectActivity(1.55, this)" class="activity-btn">
+                        <span class="badge-alpha">C</span>
+                        Aktivitas Sedang (Olahraga aktif 3-5 hari/minggu)
+                    </button>
+                </div>
+            </div>
+
+            <div id="step-result" class="step-content next-slide" style="gap: 32px;">
+                <div class="result-title">
+                    <h2>📊 Hasil Analisis Tubuhmu</h2>
+                    <p>Berdasarkan kalkulasi ilmiah gizi harianmu</p>
+                </div>
+
+                <div class="results-grid">
+                    <div class="card-result c-emerald">
+                        <span>🔥</span>
+                        <h4>Kebutuhan Energi Harian (TDEE)</h4>
+                        <p class="res-value" id="res-kalori">0 Kcal</p>
+                        <p class="res-desc">Energi ideal untuk mempertahankan berat badan sehat saat beraktivitas.</p>
+                    </div>
+
+                    <div class="card-result c-blue">
+                        <span>⚖️</span>
+                        <h4>Berat Badan Ideal Anda</h4>
+                        <p class="res-value" id="res-bb-ideal">0 Kg</p>
+                        <p class="res-desc" id="res-status-bmi">Status BMI saat ini: Menghitung...</p>
+                    </div>
+
+                    <div class="card-result c-cyan">
+                        <span>💧</span>
+                        <h4>Kebutuhan Hidrasi Harian</h4>
+                        <p class="res-value" id="res-air">0 mL</p>
+                        <p class="res-desc">Setara dengan sekitar <span id="res-gelas" style="font-weight: bold;">0</span> gelas air mineral berukuran 250ml per hari.</p>
+                    </div>
+
+                    <div class="card-result c-indigo">
+                        <span>🌙</span>
+                        <h4>Rekomendasi Waktu Tidur</h4>
+                        <p class="res-value" id="res-tidur">0 Jam</p>
+                        <p class="res-desc">Durasi tidur optimal untuk memaksimalkan regenerasi tubuh dan kecerdasan otak.</p>
+                    </div>
+                </div>
+
+                <div class="guide-box">
+                    <h3 class="guide-title"><span>💡</span>&nbsp;Panduan Diet & Menu Rekomendasi Gizi Seimbang:</h3>
+                    <div class="guide-desc">
+                        <p style="margin-bottom: 12px;">Untuk mencukupi target di atas, pastikan piring makanmu menerapkan prinsip <strong class="text-emerald-highlight">Isi Piringku</strong> (Karbohidrat kompleks, protein tinggi, lemak sehat, serta serat mikro).</p>
+                        
+                        <ul class="guide-list">
+                            <li><strong>Sumber Karbohidrat Kompleks:</strong> Nasi merah, kentang rebus, oat, roti gandum (Menjaga energi awet seharian).</li>
+                            <li><strong>Sumber Protein (Sangat Penting):</strong> Dada ayam, ikan, telur, tempe, tahu (Mempercepat pertumbuhan fisik & otot).</li>
+                            <li><strong>Sumber Lemak Sehat:</strong> Alpukat, kacang-kacangan, minyak zaitun (Menjaga keseimbangan hormon remaja).</li>
+                            <li><strong>Mikronutrien & Serat:</strong> Bayam, brokoli, wortel, buah jeruk, atau apel (Bagus buat daya tahan tubuh & kesehatan kulit).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <button onclick="resetCalculator()" class="btn-reset">
+                    🔄 Hitung Ulang Data Baru
+                </button>
+            </div>
+
+        </div>
+
+        <div id="calc-footer" class="calc-footer">
+            <button id="prev-btn" onclick="goBack()" class="btn-main btn-back invisible">
+                ← Kembali
+            </button>
+            <button id="next-btn" onclick="goNext()" class="btn-main btn-next">
+                Lanjut →
+            </button>
+        </div>
+
+    </div>
+
+<script>
+    // State Simpan Data User
+    let currentStep = 1;
+    let userData = {
+        gender: '',
+        umur: 0,
+        tinggi: 0,
+        berat: 0,
+        activityFactor: 0
+    };
+
+    // Fungsi Pilih Jenis Kelamin
+    function selectGender(type) {
+        userData.gender = type;
+        
+        // Reset Style Tombol
+        document.getElementById('gender-l').className = 'gender-btn';
+        document.getElementById('gender-p').className = 'gender-btn';
+
+        // Beri Highlight Aktif
+        if(type === 'laki-laki') {
+            document.getElementById('gender-l').className = 'gender-btn active-gender';
+        } else {
+            document.getElementById('gender-p').className = 'gender-btn active-gender';
+        }
+    }
+
+    // Fungsi Pilih Aktivitas
+    function selectActivity(factor, element) {
+        userData.activityFactor = factor;
+        
+        // Reset semua tombol aktivitas
+        document.querySelectorAll('.activity-btn').forEach(btn => {
+            btn.className = 'activity-btn';
+        });
+
+        // Set tombol yang diklik jadi aktif
+        element.className = 'activity-btn active-activity';
+    }
+
+    // Navigasi Maju Langkah Kuis/Form
+    function goNext() {
+        // Validasi Step 1
+        if (currentStep === 1) {
+            const umurInput = parseInt(document.getElementById('input-umur').value);
+            if (!userData.gender) {
+                alert("Silakan pilih Jenis Kelamin terlebih dahulu bray!");
+                return;
+            }
+            if (!umurInput || umurInput <= 0) {
+                alert("Harap masukkan umur valid kamu ya!");
+                return;
+            }
+            userData.umur = umurInput;
+        }
+
+        // Validasi Step 2
+        if (currentStep === 2) {
+            const tinggiInput = parseFloat(document.getElementById('input-tinggi').value);
+            const beratInput = parseFloat(document.getElementById('input-berat').value);
+            if (!tinggiInput || tinggiInput <= 30 || !beratInput || beratInput <= 5) {
+                alert("Isi data tinggi badan dan berat badan yang masuk akal ya bray!");
+                return;
+            }
+            userData.tinggi = tinggiInput;
+            userData.berat = beratInput;
+        }
+
+        // Validasi Step 3 dan Transisi ke Hasil Analisis
+        if (currentStep === 3) {
+            if (!userData.activityFactor) {
+                alert("Silakan pilih salah satu opsi aktivitas fisikmu harian!");
+                return;
+            }
+            
+            calculateResults();
+            
+            // Logika slide keluar untuk Step 3 dan masuk untuk Step Result
+            const currentEl = document.getElementById('step-3');
+            const resultEl = document.getElementById('step-result');
+            
+            currentEl.className = 'step-content prev-slide';
+            resultEl.className = 'step-content active';
+            
+            // Efek memudar halus untuk menyembunyikan header & footer
+            const header = document.getElementById('calc-header');
+            const footer = document.getElementById('calc-footer');
+            header.style.transition = "all 0.5s";
+            footer.style.transition = "all 0.5s";
+            header.style.opacity = "0";
+            footer.style.opacity = "0";
+            
+            setTimeout(() => {
+                header.classList.add('hidden');
+                footer.classList.add('hidden');
+            }, 500);
+            
+            currentStep = 4; 
+            return;
+        }
+
+        currentStep++;
+        updateStepUI();
+    }
+
+    // Navigasi Mundur Langkah
+    function goBack() {
+        if (currentStep > 1 && currentStep <= 3) {
+            currentStep--;
+            updateStepUI();
+        }
+    }
+
+    // Update Tampilan Berdasarkan Step Aktif dengan Animasi Slide
+    function updateStepUI() {
+        for (let i = 1; i <= 3; i++) {
+            const el = document.getElementById(`step-${i}`);
+            if (i < currentStep) {
+                el.className = 'step-content prev-slide';
+            } else if (i === currentStep) {
+                el.className = 'step-content active';
+            } else {
+                el.className = 'step-content next-slide';
+            }
+        }
+
+        // Update progress bar & text badge atas ala kuis
+        document.getElementById('step-badge').innerText = `Langkah ${currentStep} dari 3`;
+        document.getElementById('progress-bar').style.width = `${(currentStep / 3) * 100}%`;
+
+        // Atur visibilitas tombol kembali
+        if (currentStep === 1) {
+            document.getElementById('prev-btn').classList.add('invisible');
+        } else {
+            document.getElementById('prev-btn').classList.remove('invisible');
+        }
+    }
+
+    // LOGIKA PERHITUNGAN GIZI, KALORI, AIR, DAN JAM TIDUR
+    function calculateResults() {
+        const { berat, tinggi, umur, gender, activityFactor } = userData;
+
+        // 1. Rumus BMR (Mifflin-St Jeor) & Kalori Harian (TDEE)
+        let bmr = 0;
+        if (gender === 'laki-laki') {
+            bmr = (10 * berat) + (6.25 * tinggi) - (5 * umur) + 5;
+        } else {
+            bmr = (10 * berat) + (6.25 * tinggi) - (5 * umur) - 161;
+        }
+        const tdee = Math.round(bmr * activityFactor);
+        document.getElementById('res-kalori').innerText = `${tdee} Kcal / hari`;
+
+        // 2. Kalkulasi Berat Badan Ideal (Rumus Broca Modifikasi)
+        let bbIdeal = (tinggi - 100) - ((tinggi - 100) * 0.10);
+        document.getElementById('res-bb-ideal').innerText = `${bbIdeal.toFixed(1)} Kg`;
+
+        // Tambahan Status Klasifikasi Massa Tubuh (BMI)
+        const bmi = berat / ((tinggi / 100) ** 2);
+        let statusBmi = "";
+        if (bmi < 18.5) statusBmi = "Berat kurang (Underweight) 🥦";
+        else if (bmi < 25) statusBmi = "Berat Normal Ideal (Healthy) ✨";
+        else statusBmi = "Kelebihan berat badan (Overweight) 🏃‍♂️";
+        document.getElementById('res-status-bmi').innerText = `Status BMI kamu saat ini: ${statusBmi}`;
+
+        // 3. Kebutuhan Hidrasi/Air (Metode Berat Badan Dasar)
+        const kebutuhanAir = Math.round(berat * 35);
+        const jumlahGelas = Math.round(kebutuhanAir / 250);
+        document.getElementById('res-air').innerText = `${kebutuhanAir} mL / hari`;
+        document.getElementById('res-gelas').innerText = jumlahGelas;
+
+        // 4. Rekomendasi Jam Tidur
+        let jamTidurs = "8 - 10"; 
+        if (umur > 18) {
+            jamTidurs = "7 - 9"; 
+        }
+        document.getElementById('res-tidur').innerText = `${jamTidurs} Jam`;
+    }
+
+    // Reset Form Mengulang Dari Awal
+    function resetCalculator() {
+        currentStep = 1;
+        userData = { gender: '', umur: 0, tinggi: 0, berat: 0, activityFactor: 0 };
+        
+        // Reset semua field input
+        document.getElementById('input-umur').value = '';
+        document.getElementById('input-tinggi').value = '';
+        document.getElementById('input-berat').value = '';
+        
+        // Munculkan kembali header & footer
+        const header = document.getElementById('calc-header');
+        const footer = document.getElementById('calc-footer');
+        header.classList.remove('hidden');
+        footer.classList.remove('hidden');
+        setTimeout(() => {
+            header.style.opacity = "1";
+            footer.style.opacity = "1";
+        }, 50);
+
+        // Kembalikan slide result ke kanan luar
+        document.getElementById('step-result').className = 'step-content next-slide';
+
+        // Reset tampilan tombol gender & aktivitas
+        document.getElementById('gender-l').className = 'gender-btn';
+        document.getElementById('gender-p').className = 'gender-btn';
+        document.querySelectorAll('.activity-btn').forEach(btn => {
+            btn.className = 'activity-btn';
+        });
+
+        updateStepUI();
+    }
+</script>
+
+</body>
+</html>
