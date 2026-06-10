@@ -325,9 +325,43 @@
         .restart-btn:hover {
             transform: scale(1.05);
         }
+
+        /* Tombol Kembali */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #2e7d32;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: all 0.2s ease;
+            width: fit-content;
+        }
+        .back-btn:hover {
+            background-color: #e8f5e9;
+            transform: translateY(-2px);
+        }
+        .header-top {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
+
+    <div class="header-top">
+        <a href="edukasi.html" class="back-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Kembali
+        </a>
+    </div>
 
     <div class="progress-container" id="progress-container"></div>
     
@@ -365,6 +399,7 @@
         <div class="result-score" id="final-score">0 / 10</div>
         <p id="result-message">Hebat! Tetap jaga kesehatanmu ya!</p>
         <button class="restart-btn" onclick="restartQuiz()">Main Lagi</button>
+        <a href="edukasi.html" class="restart-btn" style="background-color: #ffffff; color: #4caf50; border: 2px solid #4caf50; text-decoration: none; display: inline-block; margin-left: 10px;">Kembali</a>
     </div>
 
 <script>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tanya Maribot - MARIHAT</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #438136;
+      --primary-dark: #326128;
+      --bg-color: #f0fdf4;
+      --text-dark: #1f2937;
+      --text-gray: #4b5563;
+      --white: #ffffff;
+      --chat-user-bg: #e0f2fe;
+      --chat-bot-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .chat-header {
+      background-color: var(--primary);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 10;
+    }
+
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .header-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      padding: 4px;
+    }
+
+    .header-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .header-text h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .header-text p {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.2);
+    }
+
+    /* Chat Area */
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #f8fafc;
+    }
+
+    .chat-message-wrapper {
+      display: flex;
+      gap: 12px;
+      max-width: 80%;
+      align-items: flex-end;
+    }
+
+    .chat-message-wrapper.bot {
+      align-self: flex-start;
+    }
+
+    .msg-avatar {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--primary);
+      padding: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .msg-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .chat-message {
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .chat-message.bot {
+      background: var(--white);
+      color: var(--text-dark);
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-message.user {
+      background: var(--chat-user-bg);
+      color: #0369a1;
+      align-self: flex-end;
+      max-width: 80%;
+      border-bottom-right-radius: 4px;
+    }
+
+    @keyframes chatEnter {
+      0% { opacity: 0; transform: translateY(15px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-message-wrapper, .chat-message.user {
+      animation: chatEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Options */
+    .options-title {
+      font-size: 0.9rem;
+      color: var(--text-gray);
+      margin-top: 10px;
+      margin-bottom: 5px;
+      padding-left: 50px;
+      font-weight: 600;
+    }
+
+    .chat-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 50px;
+      max-width: 400px;
+    }
+
+    .option-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--white);
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .option-card:hover {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .option-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: #ecfdf5;
+    }
+
+    .option-text {
+      flex: 1;
+    }
+    
+    .option-text h4 {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+    .option-text p {
+      font-size: 0.75rem;
+      color: var(--text-gray);
+    }
+    .chevron {
+      margin-left: auto;
+    }
+
+    /* Input Area */
+    .chat-input-area {
+      padding: 16px 24px;
+      background: var(--white);
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 30px;
+      padding: 6px 6px 6px 20px;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 129, 54, 0.1);
+    }
+
+    #fs-chat-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--text-dark);
+      padding: 10px 0;
+    }
+
+    .chat-send {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chat-send:hover {
+      background: var(--primary-dark);
+      transform: scale(1.05);
+    }
+    .chat-send:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    @media (max-width: 640px) {
+      .chat-header {
+        padding: 12px 16px;
+      }
+      .chat-body {
+        padding: 16px;
+      }
+      .chat-options-list, .options-title {
+        padding-left: 0;
+      }
+      .chat-message-wrapper {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="chat-header">
+    <button class="back-btn" aria-label="Kembali" onclick="window.location.href='edukasi.html'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+    <div class="header-info">
+      <div class="header-avatar">
+        <img src="https://cdn.corenexis.com/files/c/8518577720.png" alt="MariHat Bot" />
+      </div>
+      <div class="header-text">
+        <h1>MariHat Bot Asisten</h1>
+        <p><span class="status-dot"></span>Selalu Siap Membantu</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="chat-container">
+    <div class="chat-body" id="fs-chat-body">
+      <div class="chat-message-wrapper bot active">
+        <div class="msg-avatar">
+          <img src="https://cdn.corenexis.com/files/c/8518577720.png" alt="Bot" />
+        </div>
+        <div class="chat-message bot">
+          <p>Hallo, senang bertemu denganmu! 👋<br><br>Aku adalah MariHat bot yang dirancang khusus untuk membantumu seputar masalah kesehatan, kebugaran, dan kesejahteraan remajamu. Apa yang ingin kamu tanyakan hari ini?</p>
+        </div>
+      </div>
+      <p class="options-title">Pilih topik cepat:</p>
+      <div class="chat-options-list" id="fs-chat-options">
+        <button type="button" class="option-card" data-topic="fisik">
+          <div class="option-icon" style="color: #00c853;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path><polyline points="12 14 14 10 10 8 12 4"></polyline></svg></div>
+          <div class="option-text"><h4>Kesehatan Fisik</h4><p>Olahraga, Tidur, Kebugaran</p></div>
+          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <button type="button" class="option-card" data-topic="mental">
+          <div class="option-icon" style="color: #00c853;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a9 9 0 0 0-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9a9 9 0 0 0-9-9z"></path><path d="M12 11v4"></path><path d="M12 7h.01"></path><path d="M8.5 14h7"></path></svg></div>
+          <div class="option-text"><h4>Kesehatan Mental</h4><p>Stres, Fokus, Motivasi</p></div>
+          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <button type="button" class="option-card" data-topic="tips">
+          <div class="option-icon" style="color: #00c853;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+          <div class="option-text"><h4>Tips Belajar Sehat</h4><p>Belajar Efektif & Produktif</p></div>
+          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <button type="button" class="option-card" data-topic="lainnya">
+          <div class="option-icon" style="color: #00c853;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+          <div class="option-text"><h4>Tanya Lainnya</h4><p>Pertanyaan Bebas</p></div>
+          <svg class="chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </div>
+    
+    <form class="chat-input-area" id="fs-chat-form">
+      <div class="input-wrapper">
+        <input type="text" id="fs-chat-input" placeholder="Tanyakan sesuatu..." autocomplete="off" />
+        <button type="submit" class="chat-send" id="fs-chat-send" aria-label="Kirim">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+        </button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const chatForm = document.getElementById('fs-chat-form');
+      const chatInput = document.getElementById('fs-chat-input');
+      const chatBody = document.getElementById('fs-chat-body');
+      const chatOptions = document.getElementById('fs-chat-options');
+      const sendBtn = document.getElementById('fs-chat-send');
+
+      const botReplies = {
+        fisik: 'Untuk kesehatan fisik, kamu bisa mulai dengan olahraga ringan sehari-hari, tidur cukup 7-8 jam, dan makan makanan bergizi. Konsistensi membuat perubahan lebih mudah.',
+        mental: 'Kesehatan mental sangat penting di usia remaja. Coba luangkan waktu istirahat tanpa gadget, curhat dengan orang yang dipercaya, dan gunakan teknik relaksasi tarik napas panjang saat stres.',
+        tips: 'Tips belajar sehat: terapkan teknik Pomodoro (belajar 25 menit, istirahat 5 menit), minum air yang cukup, pastikan pencahayaan ruangan baik, dan jangan lupa bergerak agar aliran darah lancar.',
+        lainnya: 'Tentu, silakan tanyakan apapun yang ingin kamu ketahui tentang kesehatan, kebiasaan sehat, nutrisi, atau hal lain yang mendukung aktivitas belajarmu!'
+      };
+
+      const state = {
+        waiting: false
+      };
+
+      const addMessage = (text, sender = 'bot') => {
+        if (sender === 'bot') {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'chat-message-wrapper bot';
+          wrapper.innerHTML = \`
+            <div class="msg-avatar">
+              <img src="https://cdn.corenexis.com/files/c/8518577720.png" alt="Bot" />
+            </div>
+            <div class="chat-message bot">
+              <p>\${text}</p>
+            </div>
+          \`;
+          chatBody.appendChild(wrapper);
+        } else {
+          const message = document.createElement('div');
+          message.className = \`chat-message user\`;
+          message.innerHTML = \`<p>\${text}</p>\`;
+          chatBody.appendChild(message);
+        }
+        chatBody.scrollTop = chatBody.scrollHeight;
+      };
+
+      const getBotReply = (text) => {
+        const normalized = text.toLowerCase();
+        if (/fisik|olahraga|makan|tidur|sehat|diet/.test(normalized)) return botReplies.fisik;
+        if (/mental|stres|emosi|fokus|motivasi|sedih|cemas/.test(normalized)) return botReplies.mental;
+        if (/belajar|tips|produktif|jadwal|ujian/.test(normalized)) return botReplies.tips;
+        if (/halo|hai|pagi|siang|sore|malam/.test(normalized)) return 'Halo! Ada yang bisa aku bantu seputar kesehatanmu hari ini?';
+        if (/terima|kasih|thanks|makasih/.test(normalized)) return 'Sama-sama! Jangan ragu untuk bertanya lagi ya. Jaga kesehatan selalu! 🌱';
+        return 'Pertanyaan menarik! Mari kita diskusikan. Apakah kamu ingin lebih spesifik membahas tentang kesehatan fisik, mental, atau kebiasaan belajarmu?';
+      };
+
+      const sendBotReply = (text) => {
+        const reply = getBotReply(text);
+        addMessage(reply, 'bot');
+        state.waiting = false;
+        chatInput.disabled = false;
+        sendBtn.disabled = false;
+        chatInput.focus();
+      };
+
+      chatForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (state.waiting) return;
+        const value = chatInput.value.trim();
+        if (!value) return;
+        
+        addMessage(value, 'user');
+        chatInput.value = '';
+        state.waiting = true;
+        chatInput.disabled = true;
+        sendBtn.disabled = true;
+        
+        const titleOptions = document.querySelector('.options-title');
+        if (chatOptions) chatOptions.style.display = 'none';
+        if (titleOptions) titleOptions.style.display = 'none';
+
+        setTimeout(() => sendBotReply(value), 500);
+      });
+
+      if (chatOptions) {
+        chatOptions.addEventListener('click', (event) => {
+          const option = event.target.closest('button[data-topic]');
+          if (!option || state.waiting) return;
+          const topic = option.dataset.topic;
+          const topicTitle = option.querySelector('h4').textContent;
+          
+          addMessage(topicTitle, 'user');
+          state.waiting = true;
+          chatInput.disabled = true;
+          sendBtn.disabled = true;
+
+          chatOptions.style.display = 'none';
+          const titleOptions = document.querySelector('.options-title');
+          if (titleOptions) titleOptions.style.display = 'none';
+
+          setTimeout(() => {
+            addMessage(botReplies[topic] || botReplies.lainnya, 'bot');
+            state.waiting = false;
+            chatInput.disabled = false;
+            sendBtn.disabled = false;
+            chatInput.focus();
+          }, 450);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
